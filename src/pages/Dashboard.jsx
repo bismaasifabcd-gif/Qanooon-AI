@@ -11,6 +11,7 @@ import {
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { lawsData } from '../data/laws';
+import FeatureGuide from '../components/FeatureGuide';
 import logo from '../assets/logo.png';
 import askLexImg from '../assets/ask_lex_tile.png';
 import findLawyerImg from '../assets/find_lawyer_tile.png';
@@ -20,7 +21,7 @@ import historyImg from '../assets/history_tile.png';
 const Dashboard = () => {
   const navigate = useNavigate();
   const { t, language } = useLanguage();
-  const { userData } = useAuth();
+  const { userData, user } = useAuth();
 
   const [caseStatus, setCaseStatus] = useState({
     firDrafted: false,
@@ -29,6 +30,25 @@ const Dashboard = () => {
   });
 
   const [searchQuery, setSearchQuery] = useState('');
+
+  // First-time onboarding guideline steps (shown once per account).
+  const guideSteps = language === 'urdu'
+    ? [
+        { title: 'خوش آمدید', text: 'یہ آپ کا قانونی اسسٹنٹ ہے۔ نیچے دی گئی خدمات کو دریافت کریں۔' },
+        { title: 'AskLex چیٹ', text: 'کوئی بھی قانونی سوال آسان زبان میں پوچھیں اور فوری جواب پائیں۔' },
+        { title: 'لا لائبریری', text: 'پاکستانی قوانین پڑھیں، تلاش کریں اور تفصیل حاصل کریں۔' },
+        { title: 'وکیل تلاش کریں', text: 'اپنے شہر میں قریبی وکلاء اور بار ایسوسی ایشن تلاش کریں۔' },
+        { title: 'ہسٹری', text: 'آپ کی پچھلی گفتگو اور تیار کردہ دستاویزات یہاں محفوظ رہتی ہیں۔' },
+        { title: 'سرچ بار', text: 'اوپر سوال لکھیں یا کوئی فیچر تلاش کریں — دونوں کام کرتا ہے۔' },
+      ]
+    : [
+        { title: 'Welcome', text: 'This is your personal legal assistant. Explore the services below to get started.' },
+        { title: 'AskLex Chat', text: 'Ask any legal question in plain words and get an instant, grounded answer.' },
+        { title: 'Law Library', text: 'Browse, search and read detailed explanations of Pakistani laws.' },
+        { title: 'Find a Lawyer', text: 'Discover lawyers and bar associations near you, filtered by city and type.' },
+        { title: 'History', text: 'Your past chats and generated documents are saved here for later.' },
+        { title: 'Search Bar', text: 'Type a question to ask AskLex, or a feature name to jump straight to it.' },
+      ];
 
   const handleSearchSubmit = (e) => {
     e.preventDefault();
@@ -153,6 +173,13 @@ const Dashboard = () => {
 
   return (
     <div className="min-h-screen bg-surface pb-24 animate-smooth-fade-in">
+      {/* First-time onboarding guide (once per account) */}
+      <FeatureGuide
+        steps={guideSteps}
+        storageKey={`qanoon_guide_${user?.uid || 'guest'}`}
+        language={language}
+      />
+
       {/* Header — clean rectangular bar */}
       <header className="bg-primary px-5 md:px-8 pt-6 pb-6 border-b-2 border-accent/30">
         <div className="max-w-4xl mx-auto space-y-5">
