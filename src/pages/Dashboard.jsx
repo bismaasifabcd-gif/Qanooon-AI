@@ -6,8 +6,7 @@ import {
   User, 
   Settings as SettingsIcon,
   Sparkles,
-  ChevronRight,
-  Gavel
+  ChevronRight
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
@@ -27,6 +26,14 @@ const Dashboard = () => {
     lawyerFound: false,
     letterGenerated: false
   });
+
+  const [searchQuery, setSearchQuery] = useState('');
+
+  const handleSearchSubmit = (e) => {
+    e.preventDefault();
+    const q = searchQuery.trim();
+    if (q) navigate('/chatbot', { state: { prefill: q, autoSend: true } });
+  };
 
   React.useEffect(() => {
     const fir = localStorage.getItem('kanoon_status_fir') === 'true';
@@ -140,19 +147,24 @@ const Dashboard = () => {
             </h1>
           </div>
 
-          {/* Search Bar */}
-          <div className="relative group">
+          {/* Ask AI bar — submits the question to the chatbot */}
+          <form onSubmit={handleSearchSubmit} className="relative group">
             <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-accent transition-colors" />
             <input
               type="text"
-              placeholder={language === 'urdu' ? 'قانون تلاش کریں یا سوال پوچھیں...' : 'Search laws or ask a legal question...'}
-              onKeyDown={(e) => { if (e.key === 'Enter' && e.target.value.trim()) navigate('/chatbot', { state: { prefill: e.target.value.trim() } }); }}
-              className="w-full bg-white/10 border border-white/10 focus:border-accent/50 rounded-lg py-3 pl-11 pr-12 text-white placeholder:text-white/30 outline-none transition-all text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder={language === 'urdu' ? 'کوئی بھی قانونی سوال پوچھیں...' : 'Ask any legal question...'}
+              className="w-full bg-white/10 border border-white/10 focus:border-accent/50 rounded-lg py-3 pl-11 pr-14 text-white placeholder:text-white/30 outline-none transition-all text-sm"
             />
-            <div className="absolute right-2 top-1/2 -translate-y-1/2 bg-accent text-primary p-1.5 rounded-md">
-              <Gavel className="w-4 h-4" />
-            </div>
-          </div>
+            <button
+              type="submit"
+              aria-label={language === 'urdu' ? 'پوچھیں' : 'Ask'}
+              className="absolute right-2 top-1/2 -translate-y-1/2 bg-accent text-primary px-3 py-1.5 rounded-md font-black text-xs hover:bg-[#B3933C] transition-all active:scale-95"
+            >
+              {language === 'urdu' ? 'پوچھیں' : 'Ask'}
+            </button>
+          </form>
         </div>
       </header>
 

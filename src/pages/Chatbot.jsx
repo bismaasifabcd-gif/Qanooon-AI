@@ -884,6 +884,21 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
     }
   };
 
+  // Auto-send a question that was passed from the dashboard "Ask" bar.
+  const autoSentRef = useRef(false);
+  useEffect(() => {
+    if (
+      !autoSentRef.current &&
+      location.state?.autoSend &&
+      input.trim() &&
+      !loadingState
+    ) {
+      autoSentRef.current = true;
+      handleSend({ preventDefault: () => {} });
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [input, loadingState]);
+
   return (
     <div className="flex flex-col h-[100dvh] bg-surface overflow-hidden">
       {/* Premium Chat Header */}
