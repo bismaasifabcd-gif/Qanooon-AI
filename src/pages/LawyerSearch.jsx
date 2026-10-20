@@ -18,6 +18,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { KanoonLogo, LawyerProfessionalAvatar, LawyerSearchHeroIllustration } from '../components/SvgAssets';
+import FeatureGuide from '../components/FeatureGuide';
 import logo from '../assets/logo.png';
 
 const PAKISTAN_CITIES = [
@@ -93,8 +94,19 @@ const LawyerSearch = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [selectedCity, selectedType]);
 
+  const lawyerGuideSteps = language === 'urdu'
+    ? [
+        { title: 'وکیل تلاش', text: 'اوپر سے شہر اور قانون کی قسم منتخب کریں — فہرست خود اپ ڈیٹ ہو جائے گی۔' },
+        { title: 'رابطہ کریں', text: '"کال کریں" سے فون کریں یا "راستہ دیکھیں" سے نقشے پر مقام دیکھیں۔' },
+      ]
+    : [
+        { title: 'Find a Lawyer', text: 'Pick your city and law type above — the list updates automatically.' },
+        { title: 'Reach out', text: 'Use “Call Now” to phone, or “Directions” to open the office on the map.' },
+      ];
+
   return (
     <div className="min-h-screen bg-surface pb-28">
+      <FeatureGuide steps={lawyerGuideSteps} storageKey="qanoon_guide_lawyer" language={language} />
       {/* Header — rectangular, matches dashboard */}
       <header className="bg-primary px-5 md:px-8 pt-6 pb-6 border-b-2 border-accent/30">
         <div className="max-w-4xl mx-auto space-y-5">

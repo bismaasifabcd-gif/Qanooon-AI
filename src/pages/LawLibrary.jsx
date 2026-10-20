@@ -23,6 +23,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { lawsData, LAW_CATEGORY_LABELS } from '../data/laws';
 import { searchLaws } from '../services/ragService';
 import { KanoonLogo, LibraryBooksIllustration } from '../components/SvgAssets';
+import FeatureGuide from '../components/FeatureGuide';
 import logo from '../assets/logo.png';
 
 const API_BASE = (
@@ -155,8 +156,21 @@ const LawLibrary = () => {
     });
   }, [searchQuery, selectedCategory, showBookmarksOnly, bookmarks]);
 
+  const libGuideSteps = language === 'urdu'
+    ? [
+        { title: 'لا لائبریری', text: 'اوپر سرچ میں قانون کا نام، دفعہ یا موضوع لکھیں — فہرست فوراً فلٹر ہو جائے گی۔' },
+        { title: 'مکمل تفصیل', text: 'کسی قانون پر ٹیپ کریں، پھر "مکمل تفصیل" سے اس کی پوری وضاحت پڑھیں۔' },
+        { title: 'محفوظ کریں', text: 'بُک مارک آئیکن سے اہم قوانین محفوظ کریں اور "Saved" سے دوبارہ دیکھیں۔' },
+      ]
+    : [
+        { title: 'Law Library', text: 'Search a law name, section or topic above — the list filters instantly.' },
+        { title: 'Full detail', text: 'Tap any law, then “Read Full Detail” to get a complete plain-language guide.' },
+        { title: 'Save & cite', text: 'Bookmark important laws and copy a citation with one tap.' },
+      ];
+
   return (
     <div className="min-h-screen bg-surface pb-24">
+      <FeatureGuide steps={libGuideSteps} storageKey="qanoon_guide_library" language={language} />
       {/* Header — rectangular, matches dashboard */}
       <header className="bg-primary px-5 md:px-8 pt-6 pb-6 border-b-2 border-accent/30">
         <div className="max-w-4xl mx-auto space-y-5">

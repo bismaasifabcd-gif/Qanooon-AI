@@ -174,6 +174,16 @@ const Settings = () => {
               value="support@qanoon-ai.app"
               onClick={() => { window.location.href = 'mailto:support@qanoon-ai.app'; }}
             />
+            <SettingRow
+              icon={Sparkles}
+              label={language === 'urdu' ? 'رہنمائی دوبارہ دیکھیں' : 'Replay App Guide'}
+              onClick={() => {
+                Object.keys(localStorage)
+                  .filter((k) => k.startsWith('qanoon_guide_'))
+                  .forEach((k) => localStorage.removeItem(k));
+                navigate('/dashboard');
+              }}
+            />
             <SettingRow icon={Info} label={language === 'urdu' ? 'ایپ کے بارے میں' : 'About Qanoon AI'} value="v1.0.0" onClick={() => setShowAbout(true)} />
           </div>
         </section>

@@ -30,6 +30,7 @@ import * as pdfjsLib from 'pdfjs-dist';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { KanoonLogo, ChatbotEmptyState, ChatbotBannerIllustration } from '../components/SvgAssets';
+import FeatureGuide from '../components/FeatureGuide';
 import logo from '../assets/logo.png';
 import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -899,8 +900,21 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [input, loadingState]);
 
+  const chatGuideSteps = language === 'urdu'
+    ? [
+        { title: 'AskLex', text: 'یہاں کوئی بھی قانونی سوال آسان الفاظ میں لکھیں — رسمی یا عام انداز میں۔' },
+        { title: 'تفصیلی جواب', text: 'سنگین معاملات پر قانون، دفعہ اور عملی اقدامات ملتے ہیں؛ عام باتوں پر نرم مشورہ۔' },
+        { title: 'آواز اور نئی چیٹ', text: 'جواب سننے کے لیے اسپیکر دبائیں، اور "نیا" سے نئی گفتگو شروع کریں۔' },
+      ]
+    : [
+        { title: 'AskLex', text: 'Type any legal question here in plain words — formal or casual, English or Urdu.' },
+        { title: 'Detailed answers', text: 'Serious matters show the law, section and action steps; everyday ones get calm advice.' },
+        { title: 'Voice & new chat', text: 'Tap the speaker to hear a reply, and “New” to start a fresh conversation.' },
+      ];
+
   return (
     <div className="flex flex-col h-[100dvh] bg-surface overflow-hidden">
+      <FeatureGuide steps={chatGuideSteps} storageKey={`qanoon_guide_chat_${user?.uid || 'guest'}`} language={language} />
       {/* Premium Chat Header */}
       <header className="bg-primary px-3 md:px-6 py-3 flex items-center justify-between z-20 border-b-2 border-accent/30">
         <div className="flex items-center space-x-2.5 md:space-x-4 rtl:space-x-reverse min-w-0">
