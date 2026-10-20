@@ -5,7 +5,7 @@ export const en = {
   home: "Home",
   login: "Login",
   signup: "Sign Up",
-  welcomeTitle: "Welcome to Kanoon AI",
+  welcomeTitle: "Qanoon AI",
   welcomeSubtitle: "Your personal legal assistant powered by AI. Get instant answers to your legal queries.",
   getStarted: "Get Started",
   switchLanguage: "اردو",

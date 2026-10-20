@@ -5,7 +5,7 @@ export const ur = {
   home: "ہوم",
   login: "لاگ ان",
   signup: "سائن اپ",
-  welcomeTitle: "قانون AI میں خوش آمدید",
+  welcomeTitle: "قانون AI",
   welcomeSubtitle: "آپ کا ذاتی قانونی معاون جو AI سے چلتا ہے۔ اپنے قانونی سوالات کے فوری جوابات حاصل کریں۔",
   getStarted: "شروع کریں",
   switchLanguage: "English",
