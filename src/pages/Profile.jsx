@@ -120,92 +120,79 @@ const Profile = () => {
 
   return (
     <div className="min-h-screen bg-surface pb-24">
-      {/* Premium Profile Header */}
-      <header className="bg-primary pt-12 pb-32 px-6 rounded-b-[4rem] relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-        <div className="absolute right-16 bottom-0 w-36 h-36 opacity-15 pointer-events-none hidden md:block">
-          <ProfilePremiumBadge className="w-full h-full" />
-        </div>
-        
-        <div className="max-w-4xl mx-auto relative z-10 flex items-center justify-between">
-          <div className="flex items-center space-x-4 rtl:space-x-reverse">
-            <button onClick={() => navigate('/dashboard')} className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all border border-white/10">
-              <ArrowLeft className={`w-6 h-6 ${language === 'urdu' ? 'rotate-180' : ''}`} />
-            </button>
-            <img src={logo} alt="Kanoon AI Logo" className="app-logo w-9 h-9 object-cover" />
-            <h1 className={`text-white text-3xl font-black ${language === 'urdu' ? 'font-urdu text-4xl' : ''}`}>
-              {t.myProfile}
-            </h1>
-          </div>
+      {/* Header — rectangular, matches dashboard */}
+      <header className="bg-primary px-5 md:px-8 pt-6 pb-6 border-b-2 border-accent/30">
+        <div className="max-w-xl mx-auto flex items-center gap-3">
+          <button onClick={() => navigate('/dashboard')} className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all flex-shrink-0">
+            <ArrowLeft className={`w-5 h-5 ${language === 'urdu' ? 'rotate-180' : ''}`} />
+          </button>
+          <img src={logo} alt="Qanoon AI Logo" className="app-logo w-9 h-9 object-cover border border-white/10" />
+          <h1 className={`text-white text-xl md:text-2xl font-black ${language === 'urdu' ? 'font-urdu text-2xl' : ''}`}>
+            {t.myProfile}
+          </h1>
         </div>
       </header>
 
-      <main className="max-w-xl mx-auto px-6 -mt-20 relative z-20 space-y-8">
-        {/* Profile Card Redesign */}
-        <div className="bg-white rounded-[3rem] shadow-2xl shadow-primary/10 p-8 border border-primary/5 relative overflow-hidden">
+      <main className="max-w-xl mx-auto px-5 md:px-8 pt-6 space-y-5">
+        {/* Profile Card */}
+        <div className="bg-white rounded-xl shadow-sm p-5 md:p-6 border border-primary/8 relative overflow-hidden">
           {showSuccess && (
-            <div className="absolute top-0 left-0 right-0 bg-success text-white py-4 px-6 flex items-center justify-center space-x-3 animate-slide-down z-10">
-              <CheckCircle2 className="w-5 h-5" />
-              <span className="font-black text-xs uppercase tracking-widest">{t.profileUpdated}</span>
+            <div className="absolute top-0 left-0 right-0 bg-success text-white py-2.5 px-4 flex items-center justify-center gap-2 z-10">
+              <CheckCircle2 className="w-4 h-4" />
+              <span className="font-black text-[11px] uppercase tracking-widest">{t.profileUpdated}</span>
             </div>
           )}
 
-          <div className="flex flex-col items-center mb-10 pt-4">
+          <div className="flex flex-col items-center mb-6 pt-2">
             <div className="relative group">
-              <div className="absolute inset-0 bg-accent/20 rounded-full blur-2xl group-hover:scale-125 transition-transform duration-500" />
-              <div className="w-32 h-32 bg-surface rounded-full flex items-center justify-center border-4 border-white shadow-2xl relative z-10 overflow-hidden group-hover:border-accent transition-all">
+              <div className="w-24 h-24 bg-surface rounded-full flex items-center justify-center border-2 border-primary/8 relative overflow-hidden">
                 {profilePhoto ? (
                   <img src={profilePhoto} alt="Profile" className="w-full h-full object-cover" />
                 ) : (
-                  <span className="text-primary/20 text-5xl font-black">{getInitials()}</span>
+                  <span className="text-accent text-3xl font-black">{getInitials()}</span>
                 )}
                 {isUploading && (
                   <div className="absolute inset-0 bg-primary/40 flex items-center justify-center backdrop-blur-sm">
-                    <Loader2 className="w-8 h-8 text-white animate-spin" />
+                    <Loader2 className="w-7 h-7 text-white animate-spin" />
                   </div>
                 )}
               </div>
-              <label htmlFor="photo-upload" className="absolute bottom-0 right-0 bg-primary text-white p-3 rounded-2xl shadow-2xl hover:bg-accent hover:text-primary transition-all cursor-pointer z-20 border-4 border-white group-hover:scale-110">
-                <Camera className="w-5 h-5" />
+              <label htmlFor="photo-upload" className="absolute bottom-0 right-0 bg-primary text-white p-2 rounded-lg shadow hover:bg-accent hover:text-primary transition-all cursor-pointer z-20 border-2 border-white">
+                <Camera className="w-4 h-4" />
                 <input type="file" id="photo-upload" className="hidden" accept="image/*" onChange={handlePhotoChange} disabled={isUploading} />
               </label>
             </div>
-            <div className="mt-6 text-center space-y-1">
-              <h2 className={`text-3xl font-black text-primary ${language === 'urdu' ? 'font-urdu' : ''}`}>{name || 'Legal Citizen'}</h2>
-              <div className="flex items-center justify-center space-x-2 text-primary/30">
-                <Award className="w-4 h-4 text-accent" />
-                <span className="text-[10px] font-black uppercase tracking-widest">Verified Justice Identity</span>
-              </div>
-            </div>
+            <h2 className={`mt-3 text-xl font-black text-primary ${language === 'urdu' ? 'font-urdu text-2xl' : ''}`}>{name || (language === 'urdu' ? 'صارف' : 'Your Name')}</h2>
+            {user?.email && <p className="text-primary/40 text-xs font-medium">{user.email}</p>}
           </div>
 
-          <form onSubmit={handleSave} className="space-y-6">
+          <form onSubmit={handleSave} className="space-y-4">
             <InputWrapper icon={User} label={language === 'urdu' ? 'پورا نام' : 'Full Name'}>
               <input 
                 type="text"
                 value={name}
                 onChange={(e) => setName(e.target.value)}
-                className={`w-full bg-surface border-2 border-transparent focus:border-accent rounded-[1.5rem] py-5 ${language === 'urdu' ? 'pr-14 pl-6 font-urdu text-xl' : 'pl-14 pr-6'} text-primary font-black transition-all outline-none`}
+                className={`w-full bg-surface border border-primary/8 focus:border-accent rounded-lg py-3 ${language === 'urdu' ? 'pr-11 pl-4 font-urdu text-lg' : 'pl-11 pr-4'} text-primary font-semibold transition-all outline-none text-sm`}
                 required
               />
             </InputWrapper>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <InputWrapper icon={Phone} label={t.phoneNumber}>
                 <input 
                   type="tel"
                   value={phoneNumber}
                   onChange={(e) => setPhoneNumber(e.target.value)}
-                  className={`w-full bg-surface border-2 border-transparent focus:border-accent rounded-[1.5rem] py-5 ${language === 'urdu' ? 'pr-14 pl-6 font-urdu text-xl' : 'pl-14 pr-6'} text-primary font-black transition-all outline-none`}
+                  className={`w-full bg-surface border border-primary/8 focus:border-accent rounded-lg py-3 ${language === 'urdu' ? 'pr-11 pl-4 font-urdu text-lg' : 'pl-11 pr-4'} text-primary font-semibold transition-all outline-none text-sm`}
                 />
               </InputWrapper>
               <InputWrapper icon={MapPin} label={t.city}>
                 <select 
                   value={city}
                   onChange={(e) => setCity(e.target.value)}
-                  className={`w-full bg-surface border-2 border-transparent focus:border-accent rounded-[1.5rem] py-5 ${language === 'urdu' ? 'pr-14 pl-6 font-urdu text-xl' : 'pl-14 pr-6'} text-primary font-black transition-all appearance-none outline-none cursor-pointer`}
+                  className={`w-full bg-surface border border-primary/8 focus:border-accent rounded-lg py-3 ${language === 'urdu' ? 'pr-11 pl-4 font-urdu text-lg' : 'pl-11 pr-4'} text-primary font-semibold transition-all appearance-none outline-none cursor-pointer text-sm`}
                 >
-                  <option value="">Select City</option>
+                  <option value="">{language === 'urdu' ? 'شہر منتخب کریں' : 'Select City'}</option>
                   {PAKISTAN_CITIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
               </InputWrapper>
@@ -214,11 +201,11 @@ const Profile = () => {
             <button 
               type="submit"
               disabled={isSaving}
-              className="btn-justice w-full py-5 text-xl mt-4"
+              className="w-full bg-accent text-primary font-black py-3 rounded-lg flex items-center justify-center gap-2 hover:bg-[#B3933C] transition-all text-sm mt-1"
             >
-              {isSaving ? <Loader2 className="w-6 h-6 animate-spin" /> : (
+              {isSaving ? <Loader2 className="w-5 h-5 animate-spin" /> : (
                 <>
-                  <Save className="w-6 h-6" />
+                  <Save className="w-4 h-4" />
                   <span>{t.saveChanges}</span>
                 </>
               )}
@@ -226,47 +213,45 @@ const Profile = () => {
           </form>
         </div>
 
-        {/* Stats Grid Redesign */}
-        <div className="grid grid-cols-2 gap-6">
-          <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-primary/5 flex flex-col items-center text-center group hover:bg-primary transition-all">
-            <div className="p-4 bg-accent/10 rounded-2xl mb-4 group-hover:bg-accent transition-all">
-              <MessageCircle className="w-8 h-8 text-accent group-hover:text-primary" />
+        {/* Stats */}
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-white p-4 rounded-xl border border-primary/8 shadow-sm flex items-center gap-3">
+            <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+              <MessageCircle className="w-5 h-5 text-accent" />
             </div>
-            <p className="text-primary font-black text-3xl group-hover:text-white transition-all">{chatCount}</p>
-            <p className="text-primary/30 text-[10px] font-black uppercase tracking-widest group-hover:text-white/40 transition-all">Legal Consultations</p>
+            <div className="min-w-0">
+              <p className="text-primary font-black text-lg leading-none">{chatCount}</p>
+              <p className="text-primary/40 text-[10px] font-bold mt-0.5">{language === 'urdu' ? 'گفتگو' : 'Chats'}</p>
+            </div>
           </div>
-          <div className="bg-white p-8 rounded-[2.5rem] shadow-xl border border-primary/5 flex flex-col items-center text-center group hover:bg-primary transition-all">
-            <div className="p-4 bg-primary/5 rounded-2xl mb-4 group-hover:bg-white/10 transition-all">
-              <Calendar className="w-8 h-8 text-primary/20 group-hover:text-white" />
+          <div className="bg-white p-4 rounded-xl border border-primary/8 shadow-sm flex items-center gap-3">
+            <div className="w-10 h-10 bg-primary/5 rounded-lg flex items-center justify-center flex-shrink-0">
+              <Calendar className="w-5 h-5 text-primary/40" />
             </div>
-            <p className="text-primary font-black text-sm group-hover:text-white transition-all">{userData?.createdAt?.toDate().toLocaleDateString() || 'Today'}</p>
-            <p className="text-primary/30 text-[10px] font-black uppercase tracking-widest group-hover:text-white/40 transition-all">{t.memberSince}</p>
+            <div className="min-w-0">
+              <p className="text-primary font-black text-xs leading-tight">{userData?.createdAt?.toDate().toLocaleDateString() || 'Today'}</p>
+              <p className="text-primary/40 text-[10px] font-bold mt-0.5">{t.memberSince}</p>
+            </div>
           </div>
         </div>
 
-        {/* Security Quick Link */}
+        {/* Settings quick link */}
         <button 
           onClick={() => navigate('/settings')}
-          className="w-full bg-white p-6 rounded-[2rem] shadow-xl border border-primary/5 flex items-center justify-between group hover:border-accent transition-all"
+          className="w-full bg-white p-4 rounded-xl border border-primary/8 shadow-sm flex items-center justify-between group hover:border-accent/30 transition-all"
         >
-          <div className="flex items-center space-x-4 rtl:space-x-reverse">
-            <div className="w-12 h-12 bg-red-50 text-red-500 rounded-2xl flex items-center justify-center group-hover:bg-red-500 group-hover:text-white transition-all">
-              <Lock className="w-6 h-6" />
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 bg-surface text-accent rounded-lg flex items-center justify-center">
+              <Lock className="w-5 h-5" />
             </div>
             <div className="text-left rtl:text-right">
-              <p className="text-primary font-black">{t.changePassword}</p>
-              <p className="text-primary/30 text-[10px] font-bold uppercase">Update your security credentials</p>
+              <p className="text-primary font-black text-sm">{t.settings}</p>
+              <p className="text-primary/40 text-[11px] font-medium">{language === 'urdu' ? 'زبان، رازداری اور مزید' : 'Language, privacy & more'}</p>
             </div>
           </div>
           <ChevronRight className={`w-5 h-5 text-primary/20 group-hover:text-accent ${language === 'urdu' ? 'rotate-180' : ''}`} />
         </button>
       </main>
-
-      {/* Trust Seal Footer */}
-      <div className="mt-12 mb-20 flex flex-col items-center justify-center opacity-10">
-        <ShieldCheck className="w-12 h-12 text-primary" />
-        <p className="text-[8px] font-black uppercase tracking-[0.6em] mt-2">Certified Justice Account</p>
-      </div>
     </div>
   );
 };
