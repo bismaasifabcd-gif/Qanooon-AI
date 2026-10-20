@@ -30,30 +30,30 @@ const Dashboard = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Smart routing: a law/library lookup opens the Law Library pre-filtered;
-  // anything else is treated as a question and asked to the AI chatbot.
-  const looksLikeLawLookup = (q) => {
-    const n = q.toLowerCase();
-    // Explicit library intent
-    if (/\b(law library|library|browse|list of laws|قوانین|لائبریری)\b/.test(n)) return true;
-    // Statute-ish keywords
-    if (/\b(act|ordinance|code|constitution|ppc|crpc|cpc|peca|article|section|قانون|ایکٹ|آئین|دفعہ)\b/.test(n)) return true;
-    // Matches a law we actually have in the library
-    return lawsData.some((law) =>
-      law.title.toLowerCase().includes(n) ||
-      n.split(/\s+/).some((w) => w.length > 3 && law.title.toLowerCase().includes(w))
-    );
-  };
-
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const q = searchQuery.trim();
     if (!q) return;
-    if (looksLikeLawLookup(q)) {
-      navigate('/library', { state: { search: q } });
-    } else {
-      navigate('/chatbot', { state: { prefill: q, autoSend: true } });
+
+    // 1. If it matches a feature, open that feature.
+    if (matchedFeatures.length > 0) {
+      const top = matchedFeatures[0];
+      if (top.id === 'library') navigate('/library', { state: { search: q } });
+      else if (top.id === 'chatbot') navigate('/chatbot', { state: { prefill: '', autoSend: false } });
+      else navigate(top.path);
+      return;
     }
+    // 2. If it names a law in our library, open the Law Library filtered.
+    const n = q.toLowerCase();
+    const matchesLaw = lawsData.some((law) =>
+      n.split(/\s+/).some((w) => w.length > 3 && law.title.toLowerCase().includes(w))
+    );
+    if (matchesLaw) {
+      navigate('/library', { state: { search: q } });
+      return;
+    }
+    // 3. Otherwise it's a question → ask AskLex.
+    navigate('/chatbot', { state: { prefill: q, autoSend: true } });
   };
 
   React.useEffect(() => {
@@ -74,7 +74,8 @@ const Dashboard = () => {
       title: t.chatbot, 
       desc: language === 'urdu' ? 'AI سے قانونی مشورہ لیں' : 'Instant AI legal guidance',
       path: '/chatbot',
-      color: 'accent'
+      color: 'accent',
+      keywords: 'chatbot ask lex asklex ai assistant chat advice guidance سوال مشورہ چیٹ'
     },
     { 
       id: 'library',
@@ -82,7 +83,8 @@ const Dashboard = () => {
       title: t.lawLibrary, 
       desc: language === 'urdu' ? 'قوانین تلاش کریں' : 'Browse Pakistani laws',
       path: '/library',
-      color: 'primary'
+      color: 'primary',
+      keywords: 'law library laws acts ordinance code constitution ppc crpc peca read قانون لائبریری قوانین'
     },
     { 
       id: 'lawyer',
@@ -90,7 +92,8 @@ const Dashboard = () => {
       title: t.findLawyer, 
       desc: language === 'urdu' ? 'سرکردہ وکیل تلاش کریں' : 'Connect with certified advocates',
       path: '/lawyer',
-      color: 'primary'
+      color: 'primary',
+      keywords: 'lawyer advocate find lawyer vakeel wakeel barrister legal help وکیل تلاش'
     },
     { 
       id: 'history',
@@ -98,15 +101,30 @@ const Dashboard = () => {
       title: t.myHistory, 
       desc: language === 'urdu' ? 'ماضی کی گفتگو دیکھیں' : 'Review your past sessions',
       path: '/history',
+      keywords: 'history past sessions documents fir complaint letter saved تاریخ ہسٹری دستاویزات',
       color: 'primary'
     }
   ];
+
+  // Live feature matching: which feature cards match what the user is typing.
+  const q = searchQuery.trim().toLowerCase();
+  const matchedFeatures = q
+    ? features.filter((f) =>
+        f.title.toLowerCase().includes(q) ||
+        (f.keywords || '').includes(q) ||
+        q.split(/\s+/).some((w) => w.length > 2 && (f.keywords || '').includes(w))
+      )
+    : [];
+  // Show matched features first, then the rest.
+  const orderedFeatures = matchedFeatures.length
+    ? [...matchedFeatures, ...features.filter((f) => !matchedFeatures.includes(f))]
+    : features;
 
   const FeatureCard = ({ feature }) => {
     return (
       <button
         onClick={() => navigate(feature.path)}
-        className="bg-white p-3 rounded-xl border border-primary/8 shadow-sm transition-all duration-200 hover:shadow-md hover:border-accent/30 flex flex-col text-left rtl:text-right group relative overflow-hidden active:scale-[0.98]"
+        className="w-full bg-white p-3 rounded-xl border border-primary/8 shadow-sm transition-all duration-200 hover:shadow-md hover:border-accent/30 flex flex-col text-left rtl:text-right group relative overflow-hidden active:scale-[0.98]"
       >
         <div className="w-full aspect-[16/10] rounded-lg overflow-hidden relative">
           <img
@@ -193,13 +211,30 @@ const Dashboard = () => {
         {/* Section label */}
         <div className="flex items-center justify-between">
           <h2 className={`text-primary font-black text-base ${language === 'urdu' ? 'font-urdu text-lg' : ''}`}>
-            {language === 'urdu' ? 'خدمات' : 'Services'}
+            {matchedFeatures.length
+              ? (language === 'urdu' ? 'متعلقہ خدمات' : 'Matching Services')
+              : (language === 'urdu' ? 'خدمات' : 'Services')}
           </h2>
+          {q && (
+            <button
+              onClick={() => setSearchQuery('')}
+              className="text-accent text-[10px] font-black uppercase tracking-widest hover:underline"
+            >
+              {language === 'urdu' ? 'صاف کریں' : 'Clear'}
+            </button>
+          )}
         </div>
 
-        {/* Features Grid */}
+        {/* Features Grid — matches float to the top, non-matches dim */}
         <div className="grid grid-cols-2 gap-3">
-          {features.map(f => <FeatureCard key={f.id} feature={f} />)}
+          {orderedFeatures.map(f => (
+            <div
+              key={f.id}
+              className={`flex ${matchedFeatures.length && !matchedFeatures.includes(f) ? 'opacity-40' : ''}`}
+            >
+              <FeatureCard feature={f} />
+            </div>
+          ))}
         </div>
 
         {/* Daily Legal Insight */}
