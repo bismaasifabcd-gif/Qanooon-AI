@@ -887,7 +887,7 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
   return (
     <div className="flex flex-col h-[100dvh] bg-surface overflow-hidden">
       {/* Premium Chat Header */}
-      <header className="bg-primary px-3 md:px-6 py-3 flex items-center justify-between shadow-xl z-20 rounded-b-2xl">
+      <header className="bg-primary px-3 md:px-6 py-3 flex items-center justify-between z-20 border-b-2 border-accent/30">
         <div className="flex items-center space-x-2.5 md:space-x-4 rtl:space-x-reverse min-w-0">
           <button onClick={() => navigate('/dashboard')} className="text-white/60 hover:text-white p-1.5 rounded-full transition-colors flex-shrink-0">
             <ArrowLeft className={`w-5 h-5 ${language === 'urdu' ? 'rotate-180' : ''}`} />

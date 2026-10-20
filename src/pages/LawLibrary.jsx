@@ -147,56 +147,52 @@ const LawLibrary = () => {
 
   return (
     <div className="min-h-screen bg-surface pb-24">
-      {/* Premium Header */}
-      <header className="bg-primary pt-12 pb-24 px-6 rounded-b-[3.5rem] relative overflow-hidden shadow-2xl">
-        <div className="absolute top-0 right-0 w-96 h-96 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-
-        <div className="max-w-4xl mx-auto relative z-10">
-          <div className="flex items-center justify-between mb-8">
-            <div className="flex items-center space-x-4 rtl:space-x-reverse">
-              <button onClick={() => navigate('/dashboard')} className="w-12 h-12 bg-white/10 rounded-2xl flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all border border-white/10">
-                <ArrowLeft className={`w-6 h-6 ${language === 'urdu' ? 'rotate-180' : ''}`} />
-              </button>
-              <img src={logo} alt="Kanoon AI Logo" className="app-logo w-9 h-9 object-cover" />
-              <div>
-                <h1 className={`text-white text-3xl font-black ${language === 'urdu' ? 'font-urdu text-4xl' : ''}`}>
-                  {t.lawLibrary}
-                </h1>
-                <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest mt-0.5">
-                  {lawsData.length} Acts, Codes & Ordinances
-                </p>
-              </div>
+      {/* Header — rectangular, matches dashboard */}
+      <header className="bg-primary px-5 md:px-8 pt-6 pb-6 border-b-2 border-accent/30">
+        <div className="max-w-4xl mx-auto space-y-5">
+          <div className="flex items-center gap-3">
+            <button onClick={() => navigate('/dashboard')} className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all flex-shrink-0">
+              <ArrowLeft className={`w-5 h-5 ${language === 'urdu' ? 'rotate-180' : ''}`} />
+            </button>
+            <img src={logo} alt="Qanoon AI Logo" className="app-logo w-9 h-9 object-cover border border-white/10" />
+            <div>
+              <h1 className={`text-white text-xl md:text-2xl font-black leading-none ${language === 'urdu' ? 'font-urdu text-2xl' : ''}`}>
+                {t.lawLibrary}
+              </h1>
+              <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest mt-1">
+                {lawsData.length} {language === 'urdu' ? 'قوانین و ضابطے' : 'Acts, Codes & Ordinances'}
+              </p>
             </div>
           </div>
 
           {/* Search Box */}
           <div className="relative group">
-            <Search className="absolute left-6 top-1/2 -translate-y-1/2 text-white/30 group-focus-within:text-accent transition-colors" />
+            <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-white/30 group-focus-within:text-accent transition-colors" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => handleSearch(e.target.value)}
               placeholder={language === 'urdu' ? 'قانون، دفعہ یا موضوع تلاش کریں...' : 'Search any law, section or topic...'}
-              className="w-full bg-white/10 border-2 border-white/5 focus:border-accent/50 rounded-[2rem] py-5 pl-16 pr-14 text-white placeholder:text-white/30 outline-none backdrop-blur-xl transition-all"
+              className="w-full bg-white/10 border border-white/10 focus:border-accent/50 rounded-lg py-3 pl-11 pr-11 text-white placeholder:text-white/30 outline-none transition-all text-sm"
             />
             {searchQuery && (
-              <button onClick={() => handleSearch('')} className="absolute right-6 top-1/2 -translate-y-1/2 text-white/40 hover:text-white">
-                <X className="w-5 h-5" />
+              <button onClick={() => handleSearch('')} className="absolute right-4 top-1/2 -translate-y-1/2 text-white/40 hover:text-white">
+                <X className="w-4 h-4" />
               </button>
             )}
             {isSearching && (
-              <div className="absolute right-14 top-1/2 -translate-y-1/2">
-                <div className="w-5 h-5 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+              <div className="absolute right-11 top-1/2 -translate-y-1/2">
+                <div className="w-4 h-4 border-2 border-accent border-t-transparent rounded-full animate-spin" />
               </div>
             )}
           </div>
         </div>
       </header>
 
-      <main className="max-w-4xl mx-auto px-4 sm:px-6 -mt-8 md:-mt-12 relative z-20 space-y-6 md:space-y-8">
+      <main className="max-w-4xl mx-auto px-5 md:px-8 pt-6 relative z-20 space-y-5">
         {/* AI SEARCH RESULTS (REAL DATA FROM BOOKS) */}
         {aiResults.length > 0 && (
-          <div className="space-y-4 animate-fade-up">
+          <div className="space-y-3 animate-fade-up">
             <div className="flex items-center justify-between px-1">
               <div className="flex items-center space-x-2 text-accent">
                 <Sparkles className="w-4 h-4 flex-shrink-0" />
@@ -207,7 +203,7 @@ const LawLibrary = () => {
               <span className="text-primary/30 text-[9px] md:text-[10px] font-bold uppercase">Exact Page Match</span>
             </div>
             {aiResults.map((res, i) => (
-              <div key={i} className="bg-primary/95 backdrop-blur-xl rounded-[1.7rem] md:rounded-[2rem] p-5 md:p-8 border border-accent/20 shadow-2xl group hover:border-accent/50 transition-all">
+              <div key={i} className="bg-primary rounded-xl p-4 md:p-5 border border-accent/20 shadow-sm group hover:border-accent/50 transition-all">
                 <div className="flex justify-between items-start mb-4 md:mb-6 gap-2">
                   <div className="space-y-1">
                     <div className="bg-accent/10 px-3 py-0.5 md:px-4 md:py-1 rounded-full border border-accent/20 inline-block max-w-[200px] sm:max-w-xs truncate">
@@ -286,7 +282,7 @@ const LawLibrary = () => {
         </div>
 
         {/* Laws List */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           {filteredLaws.length > 0 ? (
             filteredLaws.map((law) => {
               const isBookmarked = bookmarks.includes(law.id);
@@ -294,9 +290,9 @@ const LawLibrary = () => {
               return (
                 <div
                   key={law.id}
-                  className="bg-white rounded-[1.7rem] md:rounded-[2rem] border border-primary/5 shadow-xl shadow-primary/5 overflow-hidden transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10"
+                  className="bg-white rounded-xl border border-primary/8 shadow-sm overflow-hidden transition-all duration-200 hover:border-accent/30"
                 >
-                  <div className="p-5 md:p-7 cursor-pointer group" onClick={() => setExpandedLawId(isOpen ? null : law.id)}>
+                  <div className="p-4 md:p-5 cursor-pointer group" onClick={() => setExpandedLawId(isOpen ? null : law.id)}>
                     <div className="flex justify-between items-start gap-4">
                       <div className="space-y-1 flex-1 min-w-0">
                         <div className="flex items-center space-x-2 rtl:space-x-reverse flex-wrap gap-y-1">
