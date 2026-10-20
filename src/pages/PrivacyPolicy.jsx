@@ -35,7 +35,7 @@ const PrivacyPolicy = () => {
           items: ["Delete your account and all history anytime", "Request a download of your data", "Update your information in the Profile section"]
         }
       ],
-      footer: "For privacy concerns, contact: privacy@kanoon-ai.com"
+      footer: "For privacy concerns, contact: support@qanoon-ai.app"
     },
     urdu: {
       title: "رازداری کی پالیسی",
@@ -62,7 +62,7 @@ const PrivacyPolicy = () => {
           items: ["کسی بھی وقت اپنا اکاؤنٹ اور تمام ہسٹری حذف کریں", "اپنے ڈیٹا کے ڈاؤن لوڈ کی درخواست کریں", "پروفائل سیکشن میں اپنی معلومات کو اپ ڈیٹ کریں"]
         }
       ],
-      footer: "رازداری کے خدشات کے لیے رابطہ کریں: privacy@kanoon-ai.com"
+      footer: "رازداری کے خدشات کے لیے رابطہ کریں: support@qanoon-ai.app"
     }
   };
 
@@ -70,71 +70,59 @@ const PrivacyPolicy = () => {
 
   return (
     <div className="min-h-screen bg-surface pb-20">
-      {/* Header */}
-      <header className="bg-primary px-6 py-10 shadow-xl relative overflow-hidden">
-        <div className="absolute top-0 right-0 w-64 h-64 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-3xl" />
-        
-        {/* Back and Logo Row */}
-        <div className="max-w-4xl mx-auto flex items-center justify-between mb-6 z-10 relative">
-          <div className="flex items-center space-x-4">
+      {/* Header — rectangular, matches dashboard */}
+      <header className="bg-primary px-5 md:px-8 pt-6 pb-6 border-b-2 border-accent/30">
+        <div className="max-w-3xl mx-auto space-y-4">
+          <div className="flex items-center gap-3">
             <button 
               onClick={() => navigate(-1)} 
-              className="w-10 h-10 bg-white/10 rounded-xl flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all border border-white/10"
+              className="w-10 h-10 bg-white/10 rounded-lg flex items-center justify-center text-white hover:bg-accent hover:text-primary transition-all flex-shrink-0"
             >
               <ArrowLeft className="w-5 h-5" />
             </button>
-            <img src={logo} alt="Kanoon AI Logo" className="app-logo w-9 h-9 object-cover" />
+            <img src={logo} alt="Qanoon AI Logo" className="app-logo w-9 h-9 object-cover border border-white/10" />
+            <h1 className={`text-white text-xl md:text-2xl font-black ${activeLang === 'urdu' ? 'font-urdu text-2xl' : ''}`}>
+              {current.title}
+            </h1>
           </div>
-        </div>
-
-        <div className="max-w-4xl mx-auto flex flex-col items-center text-center relative z-10">
-          <div className="w-16 h-16 bg-accent rounded-2xl flex items-center justify-center mb-6 shadow-lg shadow-accent/20">
-            <Shield className="w-10 h-10 text-primary" />
-          </div>
-          
-          <h1 className={`text-accent text-3xl font-black mb-2 ${activeLang === 'urdu' ? 'font-urdu' : 'font-heading'}`}>
-            {current.title}
-          </h1>
-          <p className={`text-white/60 text-sm font-medium ${activeLang === 'urdu' ? 'font-urdu' : ''}`}>
+          <p className={`text-white/50 text-sm font-medium ${activeLang === 'urdu' ? 'font-urdu text-base' : ''}`}>
             {current.tagline}
           </p>
+
+          {/* Language Toggle */}
+          <div className="inline-flex bg-white/10 rounded-lg p-1">
+            <button 
+              onClick={() => setActiveLang('english')}
+              className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${activeLang === 'english' ? 'bg-accent text-primary' : 'text-white/50'}`}
+            >
+              English
+            </button>
+            <button 
+              onClick={() => setActiveLang('urdu')}
+              className={`px-4 py-1.5 rounded-md text-xs font-bold transition-all ${activeLang === 'urdu' ? 'bg-accent text-primary' : 'text-white/50'}`}
+            >
+              اردو
+            </button>
+          </div>
         </div>
       </header>
 
-      {/* Language Toggle */}
-      <div className="flex justify-center -mt-6 relative z-10">
-        <div className="bg-white rounded-full shadow-xl border border-primary/5 p-1 flex">
-          <button 
-            onClick={() => setActiveLang('urdu')}
-            className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${activeLang === 'urdu' ? 'bg-primary text-white' : 'text-primary/40'}`}
-          >
-            اردو
-          </button>
-          <button 
-            onClick={() => setActiveLang('english')}
-            className={`px-6 py-2 rounded-full text-sm font-bold transition-all ${activeLang === 'english' ? 'bg-primary text-white' : 'text-primary/40'}`}
-          >
-            English
-          </button>
-        </div>
-      </div>
-
-      <main className="max-w-3xl mx-auto px-6 py-12 space-y-8">
+      <main className="max-w-3xl mx-auto px-5 md:px-8 pt-6 space-y-3">
         {current.sections.map((section, idx) => (
-          <div key={idx} className="bg-white rounded-3xl p-8 shadow-sm border border-primary/5 hover:shadow-md transition-all">
-            <div className={`flex items-center space-x-4 mb-6 ${activeLang === 'urdu' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-              <div className="p-3 bg-accent/10 rounded-xl">
-                <section.icon className="w-6 h-6 text-accent" />
+          <div key={idx} className="bg-white rounded-xl p-5 shadow-sm border border-primary/8">
+            <div className={`flex items-center gap-3 mb-4 ${activeLang === 'urdu' ? 'flex-row-reverse' : ''}`}>
+              <div className="w-10 h-10 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                <section.icon className="w-5 h-5 text-accent" />
               </div>
-              <h3 className={`text-xl font-bold text-primary ${activeLang === 'urdu' ? 'font-urdu' : ''}`}>
+              <h3 className={`text-base font-black text-primary ${activeLang === 'urdu' ? 'font-urdu text-lg' : ''}`}>
                 {section.title}
               </h3>
             </div>
-            <ul className={`space-y-4 ${activeLang === 'urdu' ? 'text-right' : ''}`}>
+            <ul className={`space-y-2.5 ${activeLang === 'urdu' ? 'text-right' : ''}`}>
               {section.items.map((item, i) => (
-                <li key={i} className={`flex items-start space-x-3 ${activeLang === 'urdu' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                  <div className="mt-2 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
-                  <p className={`text-primary/60 font-medium ${activeLang === 'urdu' ? 'font-urdu text-lg' : 'text-sm'}`}>
+                <li key={i} className={`flex items-start gap-2.5 ${activeLang === 'urdu' ? 'flex-row-reverse' : ''}`}>
+                  <div className="mt-1.5 w-1.5 h-1.5 rounded-full bg-accent flex-shrink-0" />
+                  <p className={`text-primary/60 font-medium ${activeLang === 'urdu' ? 'font-urdu text-base' : 'text-[13px]'}`}>
                     {item}
                   </p>
                 </li>
@@ -143,10 +131,10 @@ const PrivacyPolicy = () => {
           </div>
         ))}
 
-        <div className="bg-primary/5 rounded-2xl p-6 text-center border-2 border-dashed border-primary/10">
-          <div className="flex items-center justify-center space-x-3 mb-2">
-            <Mail className="w-4 h-4 text-primary/40" />
-            <p className="text-primary font-bold text-sm">{current.footer}</p>
+        <div className="bg-primary/5 rounded-xl p-4 text-center border border-primary/10 mb-8">
+          <div className={`flex items-center justify-center gap-2 ${activeLang === 'urdu' ? 'flex-row-reverse' : ''}`}>
+            <Mail className="w-4 h-4 text-primary/40 flex-shrink-0" />
+            <p className="text-primary/70 font-bold text-xs break-all">{current.footer}</p>
           </div>
         </div>
       </main>
