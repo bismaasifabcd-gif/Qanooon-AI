@@ -44,7 +44,10 @@ const LawyerSearch = () => {
 
   const [error, setError] = useState(null);
 
-  const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+  const API_BASE = (
+    import.meta.env.VITE_API_URL ||
+    (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:5000' : '')
+  ).replace(/\/$/, '');
 
   const fetchLawyers = async () => {
     setLoading(true);

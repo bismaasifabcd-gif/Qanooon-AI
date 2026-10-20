@@ -12,7 +12,12 @@
  * compatibility with existing callers (Chatbot.jsx, FIR/Complaint components).
  */
 
-const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+// API base: explicit VITE_API_URL wins; on localhost dev default to :5000;
+// otherwise use same-origin (Vercel serves the /api functions alongside the app).
+const API_BASE = (
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:5000' : '')
+).replace(/\/$/, '');
 
 /**
  * Chat — asks the Groq backend and returns its answer. Nothing else.

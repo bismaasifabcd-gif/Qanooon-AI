@@ -25,7 +25,10 @@ import { searchLaws } from '../services/ragService';
 import { KanoonLogo, LibraryBooksIllustration } from '../components/SvgAssets';
 import logo from '../assets/logo.png';
 
-const API_BASE = (import.meta.env.VITE_API_URL || 'http://localhost:5000').replace(/\/$/, '');
+const API_BASE = (
+  import.meta.env.VITE_API_URL ||
+  (typeof window !== 'undefined' && window.location.hostname === 'localhost' ? 'http://localhost:5000' : '')
+).replace(/\/$/, '');
 
 const BOOKMARK_KEY = 'kanoon_bookmarked_laws';
 
