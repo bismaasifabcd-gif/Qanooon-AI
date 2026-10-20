@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+server/node_modules/
+
+# Build output
+dist/
+
+# Logs / temp from local setup
+*_log.txt
+install_log.txt
+build_log.txt
+ingest_log.txt
+deploy_log.txt
+fbcli_log.txt
+fbver_log.txt
+vcredist_log.txt
+fnlist_log.txt
+
+# Environment variables (NEVER commit these)
+.env
+.env.local
+.env.production
+
+# Firebase
+firebase-debug.log
+.firebase/
+
+# IDE
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db

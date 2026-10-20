@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: kanoon-ai-backend
+    env: node
+    plan: free
+    rootDir: server
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: GROQ_API_KEY
+        sync: false
+        placeholder: "Your Groq API key (gsk_...)"
+      - key: NODE_ENV
+        value: production
