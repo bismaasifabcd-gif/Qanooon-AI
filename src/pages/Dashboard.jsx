@@ -10,6 +10,7 @@ import {
 } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
+import { lawsData } from '../data/laws';
 import logo from '../assets/logo.png';
 import askLexImg from '../assets/ask_lex_tile.png';
 import findLawyerImg from '../assets/find_lawyer_tile.png';
@@ -29,10 +30,30 @@ const Dashboard = () => {
 
   const [searchQuery, setSearchQuery] = useState('');
 
+  // Smart routing: a law/library lookup opens the Law Library pre-filtered;
+  // anything else is treated as a question and asked to the AI chatbot.
+  const looksLikeLawLookup = (q) => {
+    const n = q.toLowerCase();
+    // Explicit library intent
+    if (/\b(law library|library|browse|list of laws|قوانین|لائبریری)\b/.test(n)) return true;
+    // Statute-ish keywords
+    if (/\b(act|ordinance|code|constitution|ppc|crpc|cpc|peca|article|section|قانون|ایکٹ|آئین|دفعہ)\b/.test(n)) return true;
+    // Matches a law we actually have in the library
+    return lawsData.some((law) =>
+      law.title.toLowerCase().includes(n) ||
+      n.split(/\s+/).some((w) => w.length > 3 && law.title.toLowerCase().includes(w))
+    );
+  };
+
   const handleSearchSubmit = (e) => {
     e.preventDefault();
     const q = searchQuery.trim();
-    if (q) navigate('/chatbot', { state: { prefill: q, autoSend: true } });
+    if (!q) return;
+    if (looksLikeLawLookup(q)) {
+      navigate('/library', { state: { search: q } });
+    } else {
+      navigate('/chatbot', { state: { prefill: q, autoSend: true } });
+    }
   };
 
   React.useEffect(() => {
@@ -154,7 +175,7 @@ const Dashboard = () => {
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder={language === 'urdu' ? 'کوئی بھی قانونی سوال پوچھیں...' : 'Ask any legal question...'}
+              placeholder={language === 'urdu' ? 'سوال پوچھیں یا قانون تلاش کریں...' : 'Ask a question or search a law...'}
               className="w-full bg-white/10 border border-white/10 focus:border-accent/50 rounded-lg py-3 pl-11 pr-14 text-white placeholder:text-white/30 outline-none transition-all text-sm"
             />
             <button

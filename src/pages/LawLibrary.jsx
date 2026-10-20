@@ -1,5 +1,5 @@
 import React, { useState, useMemo, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import {
   ArrowLeft,
   Search,
@@ -34,9 +34,10 @@ const BOOKMARK_KEY = 'kanoon_bookmarked_laws';
 
 const LawLibrary = () => {
   const navigate = useNavigate();
+  const location = useLocation();
   const { t, language } = useLanguage();
 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(location.state?.search || '');
   const [selectedCategory, setSelectedCategory] = useState('all');
   const [expandedLawId, setExpandedLawId] = useState(null);
   const [aiResults, setAiResults] = useState([]);
@@ -77,6 +78,15 @@ const LawLibrary = () => {
       const saved = JSON.parse(localStorage.getItem(BOOKMARK_KEY) || '[]');
       setBookmarks(Array.isArray(saved) ? saved : []);
     } catch { setBookmarks([]); }
+  }, []);
+
+  // If opened from the dashboard with a search query, run the deep search once.
+  useEffect(() => {
+    const incoming = location.state?.search;
+    if (incoming && incoming.trim().length > 5) {
+      handleSearch(incoming);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const toggleBookmark = (id) => {
