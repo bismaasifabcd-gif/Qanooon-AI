@@ -131,27 +131,44 @@ function guessSpecialty(name = '') {
   return 'General Practice';
 }
 
+// Fetch with a hard timeout so a slow Overpass call can't exceed Vercel's
+// 10s serverless limit. Returns [] on timeout/failure (we still have baseline).
+async function fetchWithTimeout(url, opts, ms) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), ms);
+  try {
+    return await fetch(url, { ...opts, signal: ctrl.signal });
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
 async function overpassQuery(lat, lon) {
+  // Smaller radius + shorter server timeout keeps responses well under 10s.
   const q =
-    `[out:json][timeout:25];(` +
-    `node["office"="lawyer"](around:20000,${lat},${lon});` +
-    `way["office"="lawyer"](around:20000,${lat},${lon});` +
-    `node["amenity"="lawyer"](around:20000,${lat},${lon});` +
-    `);out center 40;`;
-  let lastErr;
+    `[out:json][timeout:8];(` +
+    `node["office"="lawyer"](around:15000,${lat},${lon});` +
+    `way["office"="lawyer"](around:15000,${lat},${lon});` +
+    `);out center 30;`;
   for (const ep of OVERPASS_ENDPOINTS) {
     try {
-      const r = await fetch(ep, {
-        method: 'POST',
-        headers: { 'User-Agent': 'KanoonAI/1.0 (legal-aid app)' },
-        body: 'data=' + encodeURIComponent(q),
-      });
-      if (!r.ok) { lastErr = new Error(`Overpass ${r.status}`); continue; }
+      const r = await fetchWithTimeout(
+        ep,
+        {
+          method: 'POST',
+          headers: { 'User-Agent': 'KanoonAI/1.0 (legal-aid app)' },
+          body: 'data=' + encodeURIComponent(q),
+        },
+        7000, // abort after 7s so the whole function stays under 10s
+      );
+      if (!r.ok) continue;
       const d = await r.json();
       return d.elements || [];
-    } catch (e) { lastErr = e; }
+    } catch {
+      // timeout or network error — try next endpoint, else fall through
+    }
   }
-  throw lastErr || new Error('Overpass unavailable');
+  return []; // give up on OSM; caller still returns the Bar Association baseline
 }
 
 function toLawyer(el, city) {
