@@ -23,7 +23,10 @@ import {
   Share2,
   Printer,
   Download,
-  Gavel
+  Gavel,
+  History as HistoryIcon,
+  Plus,
+  MessageSquare
 } from 'lucide-react';
 import EmojiPicker from 'emoji-picker-react';
 import * as pdfjsLib from 'pdfjs-dist';
@@ -32,7 +35,7 @@ import { useAuth } from '../contexts/AuthContext';
 import { KanoonLogo, ChatbotEmptyState, ChatbotBannerIllustration } from '../components/SvgAssets';
 import FeatureGuide from '../components/FeatureGuide';
 import logo from '../assets/logo.png';
-import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc, setDoc } from 'firebase/firestore';
+import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc, setDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
 // RAG disabled to conserve API quota — kept for future re-enable
 // import { searchLaws } from '../services/ragService';
@@ -593,6 +596,22 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
   const [messages, setMessages] = useState(getInitialWelcomeMessage());
   const [history, setHistory] = useState([]);
   const [currentSessionId, setCurrentSessionId] = useState(null);
+  const [showHistoryPanel, setShowHistoryPanel] = useState(false);
+  const [chatSessions, setChatSessions] = useState([]);
+
+  // Live list of this account's past chat sessions (for the slide-in panel).
+  useEffect(() => {
+    if (!user) return;
+    const q = query(collection(db, 'users', user.uid, 'history'), orderBy('updatedAt', 'desc'));
+    const unsub = onSnapshot(q, (snap) => {
+      setChatSessions(
+        snap.docs
+          .map((d) => ({ id: d.id, ...d.data() }))
+          .filter((s) => s.type === 'chat')
+      );
+    }, () => {});
+    return () => unsub();
+  }, [user]);
 
   const startNewSession = () => {
     setMessages(getInitialWelcomeMessage());
@@ -912,14 +931,94 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
         { title: 'Voice & new chat', text: 'Tap the speaker to hear a reply, and “New” to start a fresh conversation.' },
       ];
 
+  const openSessionFromPanel = (id) => {
+    setShowHistoryPanel(false);
+    loadExistingSession(id);
+  };
+
   return (
     <div className="flex flex-col h-[100dvh] bg-surface overflow-hidden">
       <FeatureGuide steps={chatGuideSteps} storageKey={`qanoon_guide_chat_${user?.uid || 'guest'}`} language={language} />
+
+      {/* Chat history — slide-in panel (ChatGPT style) */}
+      <div
+        onClick={() => setShowHistoryPanel(false)}
+        className={`fixed inset-0 z-[80] bg-primary/40 backdrop-blur-sm transition-opacity duration-300 ${
+          showHistoryPanel ? 'opacity-100' : 'opacity-0 pointer-events-none'
+        }`}
+      />
+      <aside
+        className={`fixed top-0 bottom-0 ${language === 'urdu' ? 'right-0' : 'left-0'} z-[81] w-[82%] max-w-xs bg-white shadow-2xl flex flex-col transition-transform duration-300 ease-out ${
+          showHistoryPanel ? 'translate-x-0' : (language === 'urdu' ? 'translate-x-full' : '-translate-x-full')
+        }`}
+      >
+        {/* Panel header */}
+        <div className="bg-primary px-4 py-4 flex items-center justify-between border-b-2 border-accent/30 flex-shrink-0">
+          <div className="flex items-center gap-2">
+            <HistoryIcon className="w-4 h-4 text-accent" />
+            <span className="text-white font-black text-sm">{language === 'urdu' ? 'آپ کی گفتگو' : 'Your Chats'}</span>
+          </div>
+          <button onClick={() => setShowHistoryPanel(false)} className="text-white/60 hover:text-white p-1">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* New chat */}
+        <div className="p-3 flex-shrink-0">
+          <button
+            onClick={() => { setShowHistoryPanel(false); startNewSession(); }}
+            className="w-full bg-accent text-primary font-black py-2.5 rounded-lg flex items-center justify-center gap-2 hover:bg-[#B3933C] transition-all text-sm"
+          >
+            <Plus className="w-4 h-4" />
+            <span>{language === 'urdu' ? 'نئی گفتگو' : 'New Chat'}</span>
+          </button>
+        </div>
+
+        {/* Session list */}
+        <div className="flex-1 overflow-y-auto px-3 pb-4 space-y-1.5 custom-scrollbar">
+          {chatSessions.length === 0 ? (
+            <div className="text-center py-10 px-4">
+              <MessageSquare className="w-10 h-10 text-primary/15 mx-auto mb-3" />
+              <p className="text-primary/40 text-xs font-medium">
+                {language === 'urdu' ? 'ابھی کوئی گفتگو محفوظ نہیں۔' : 'No saved chats yet.'}
+              </p>
+            </div>
+          ) : (
+            chatSessions.map((s) => (
+              <button
+                key={s.id}
+                onClick={() => openSessionFromPanel(s.id)}
+                className={`w-full text-left rtl:text-right p-3 rounded-lg transition-all flex items-start gap-2.5 group ${
+                  currentSessionId === s.id ? 'bg-accent/10 border border-accent/30' : 'hover:bg-surface border border-transparent'
+                }`}
+              >
+                <MessageSquare className="w-4 h-4 text-accent mt-0.5 flex-shrink-0" />
+                <div className="min-w-0 flex-1">
+                  <p className={`text-primary font-bold text-[13px] truncate ${language === 'urdu' ? 'font-urdu' : ''}`}>
+                    {s.summary || (language === 'urdu' ? 'قانونی گفتگو' : 'Legal Chat')}
+                  </p>
+                  <p className="text-primary/30 text-[10px] font-medium mt-0.5">
+                    {s.updatedAt?.toDate ? s.updatedAt.toDate().toLocaleDateString() : ''}
+                  </p>
+                </div>
+              </button>
+            ))
+          )}
+        </div>
+      </aside>
+
       {/* Premium Chat Header */}
       <header className="bg-primary px-3 md:px-6 py-3 flex items-center justify-between z-20 border-b-2 border-accent/30">
-        <div className="flex items-center space-x-2.5 md:space-x-4 rtl:space-x-reverse min-w-0">
+        <div className="flex items-center space-x-2 md:space-x-3 rtl:space-x-reverse min-w-0">
           <button onClick={() => navigate('/dashboard')} className="text-white/60 hover:text-white p-1.5 rounded-full transition-colors flex-shrink-0">
             <ArrowLeft className={`w-5 h-5 ${language === 'urdu' ? 'rotate-180' : ''}`} />
+          </button>
+          <button
+            onClick={() => setShowHistoryPanel(true)}
+            aria-label="Chat history"
+            className="text-white/70 hover:text-primary hover:bg-accent p-1.5 rounded-lg transition-all flex-shrink-0 border border-white/10"
+          >
+            <HistoryIcon className="w-4 h-4" />
           </button>
           <div className="flex items-center space-x-2.5 rtl:space-x-reverse min-w-0">
             <div className="relative flex-shrink-0">
