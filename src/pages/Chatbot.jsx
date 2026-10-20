@@ -34,6 +34,7 @@ import { useLanguage } from '../contexts/LanguageContext';
 import { useAuth } from '../contexts/AuthContext';
 import { KanoonLogo, ChatbotEmptyState, ChatbotBannerIllustration } from '../components/SvgAssets';
 import FeatureGuide from '../components/FeatureGuide';
+import CaseStrength from '../components/CaseStrength';
 import logo from '../assets/logo.png';
 import { collection, addDoc, serverTimestamp, doc, getDoc, updateDoc, setDoc, query, orderBy, onSnapshot } from 'firebase/firestore';
 import { db } from '../firebase/config';
@@ -598,6 +599,7 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
   const [currentSessionId, setCurrentSessionId] = useState(null);
   const [showHistoryPanel, setShowHistoryPanel] = useState(false);
   const [chatSessions, setChatSessions] = useState([]);
+  const [showCaseStrength, setShowCaseStrength] = useState(false);
 
   // Live list of this account's past chat sessions (for the slide-in panel).
   useEffect(() => {
@@ -1036,7 +1038,18 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
             </div>
           </div>
         </div>
-        <div className="flex items-center flex-shrink-0">
+        <div className="flex items-center gap-1.5 md:gap-2 flex-shrink-0">
+          <button
+            onClick={() => setShowCaseStrength(true)}
+            aria-label={language === 'urdu' ? 'کیس کی مضبوطی کا تجزیہ' : 'Case Strength Analysis'}
+            title={language === 'urdu' ? 'کیس کی مضبوطی کا تجزیہ' : 'Case Strength Analysis'}
+            className="text-white bg-accent/20 hover:bg-accent hover:text-[#0F1E36] p-1.5 md:px-3 md:py-1.5 rounded-lg transition-all flex items-center gap-1.5 border border-accent/30"
+          >
+            <ShieldCheck className="w-4 h-4" />
+            <span className="hidden md:inline text-[10px] md:text-xs font-black uppercase tracking-wider whitespace-nowrap">
+              {language === 'urdu' ? 'کیس تجزیہ' : 'Case Check'}
+            </span>
+          </button>
           <button 
             onClick={startNewSession}
             className="text-white bg-white/10 hover:bg-[#C9A84C] hover:text-[#0F1E36] px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap"
@@ -1739,6 +1752,18 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
 
           </div>
         </div>
+      )}
+
+      {/* Case Strength Analysis — OCR (free, in-browser) + Groq scoring */}
+      {showCaseStrength && (
+        <CaseStrength
+          situation={messages
+            .filter((m) => m.role === 'user')
+            .map((m) => m.content)
+            .join(' ')
+            .slice(0, 500)}
+          onClose={() => setShowCaseStrength(false)}
+        />
       )}
     </div>
   );
