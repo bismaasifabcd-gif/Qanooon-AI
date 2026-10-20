@@ -887,33 +887,33 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
   return (
     <div className="flex flex-col h-[100dvh] bg-surface overflow-hidden">
       {/* Premium Chat Header */}
-      <header className="bg-primary px-6 py-4 flex items-center justify-between shadow-2xl z-20 rounded-b-[2rem]">
-        <div className="flex items-center space-x-4 rtl:space-x-reverse">
-          <button onClick={() => navigate('/dashboard')} className="text-white/60 hover:text-white p-2 rounded-full transition-colors">
-            <ArrowLeft className={`w-6 h-6 ${language === 'urdu' ? 'rotate-180' : ''}`} />
+      <header className="bg-primary px-3 md:px-6 py-3 flex items-center justify-between shadow-xl z-20 rounded-b-2xl">
+        <div className="flex items-center space-x-2.5 md:space-x-4 rtl:space-x-reverse min-w-0">
+          <button onClick={() => navigate('/dashboard')} className="text-white/60 hover:text-white p-1.5 rounded-full transition-colors flex-shrink-0">
+            <ArrowLeft className={`w-5 h-5 ${language === 'urdu' ? 'rotate-180' : ''}`} />
           </button>
-          <div className="flex items-center space-x-3 rtl:space-x-reverse">
-            <div className="relative">
-              <div className="w-12 h-12 bg-accent rounded-2xl flex items-center justify-center shadow-lg shadow-accent/20 overflow-hidden">
-                <img src={logo} alt="Kanoon AI Logo" className="app-logo w-9 h-9 object-cover" />
+          <div className="flex items-center space-x-2.5 rtl:space-x-reverse min-w-0">
+            <div className="relative flex-shrink-0">
+              <div className="w-9 h-9 md:w-11 md:h-11 bg-accent rounded-xl md:rounded-2xl flex items-center justify-center shadow-md shadow-accent/20 overflow-hidden">
+                <img src={logo} alt="Kanoon AI Logo" className="app-logo w-7 h-7 md:w-8 md:h-8 object-cover" />
               </div>
-              <div className="absolute -bottom-1 -right-1 w-4 h-4 bg-success border-2 border-primary rounded-full animate-pulse" />
+              <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-success border-2 border-primary rounded-full animate-pulse" />
             </div>
-            <div>
+            <div className="min-w-0">
               <div className="flex items-center space-x-1 rtl:space-x-reverse">
-                <h2 className="text-white font-black text-lg">AskLex</h2>
-                <Sparkles className="w-4 h-4 text-accent animate-pulse" />
+                <h2 className="text-white font-black text-base md:text-lg">AskLex</h2>
+                <Sparkles className="w-3.5 h-3.5 text-accent animate-pulse flex-shrink-0" />
               </div>
-              <p className="text-white/40 text-[10px] font-bold uppercase tracking-widest">AI Legal Assistant</p>
+              <p className="text-white/40 text-[9px] font-bold uppercase tracking-widest">AI Legal Assistant</p>
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-3 rtl:space-x-reverse">
+        <div className="flex items-center flex-shrink-0">
           <button 
             onClick={startNewSession}
-            className="text-white bg-white/10 hover:bg-[#C9A84C] hover:text-[#0F1E36] px-4 py-2 rounded-xl text-xs font-black uppercase tracking-wider transition-all"
+            className="text-white bg-white/10 hover:bg-[#C9A84C] hover:text-[#0F1E36] px-3 py-1.5 rounded-lg text-[10px] md:text-xs font-black uppercase tracking-wider transition-all whitespace-nowrap"
           >
-            {language === 'urdu' ? 'نیا چیٹ ➕' : 'New Chat ➕'}
+            {language === 'urdu' ? 'نیا چیٹ ➕' : 'New ➕'}
           </button>
         </div>
       </header>
@@ -931,16 +931,16 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
       )}
 
       {/* Messages Area with Offline-Secure CSS Grid Pattern (Replacing cubes.png external URL) */}
-      <div className="flex-1 overflow-y-auto p-4 md:p-8 space-y-8 custom-scrollbar bg-[radial-gradient(#C9A84C_1px,transparent_1px)] [background-size:16px_16px] bg-opacity-[0.03]">
+      <div className="flex-1 overflow-y-auto px-3 py-4 md:px-8 md:py-6 space-y-4 md:space-y-6 custom-scrollbar bg-[radial-gradient(#C9A84C_1px,transparent_1px)] [background-size:16px_16px] bg-opacity-[0.03]">
         {/* Guided Explorer Empty State */}
         {messages.length === 1 && (
-          <div className="w-full max-w-xl mx-auto text-center space-y-6 pb-6 animate-fade-up">
-            <ChatbotBannerIllustration className="w-56 h-56 mx-auto" />
-            <div className="space-y-2">
-              <p className="text-primary font-black text-lg">AskLex Guided Legal Explorer</p>
-              <p className="text-primary/40 text-xs font-medium max-w-md mx-auto">Select a scenario below or type your situation to receive instant grounded advice.</p>
+          <div className="w-full max-w-xl mx-auto text-center space-y-4 pb-4 animate-fade-up">
+            <ChatbotBannerIllustration className="w-36 h-36 md:w-48 md:h-48 mx-auto" />
+            <div className="space-y-1">
+              <p className="text-primary font-black text-base md:text-lg">How can I help you today?</p>
+              <p className="text-primary/40 text-[11px] md:text-xs font-medium max-w-md mx-auto px-4">Ask about any law, or describe your situation — formally or casually.</p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-w-md mx-auto px-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 max-w-md mx-auto px-2">
               {[
                 { text: language === 'urdu' ? 'ملازمت کے حقوق کیا ہیں؟' : 'What are labor rights in Pakistan?', prefill: language === 'urdu' ? 'پاکستان میں ملازمین کے بنیادی حقوق کیا ہیں؟' : 'What are the basic rights of employees in Pakistan?' },
                 { text: language === 'urdu' ? 'سائبر ہراسگی کی شکایت کیسے کریں؟' : 'How to report cyber harassment?', prefill: language === 'urdu' ? 'پاکستان میں سائبر ہراسگی یا بلیک میلنگ کی شکایت کیسے کی جائے؟' : 'How to report cyber harassment or blackmailing under PECA Pakistan?' },
@@ -950,22 +950,22 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
                 <button
                   key={i}
                   onClick={() => setInput(s.prefill)}
-                  className="bg-white hover:bg-accent/10 border border-primary/5 hover:border-accent/40 px-4 py-3.5 rounded-2xl text-[11px] font-black text-primary transition-all text-left rtl:text-right shadow-sm active:scale-95 cursor-pointer"
+                  className="bg-white hover:bg-accent/10 border border-primary/5 hover:border-accent/40 px-3 py-3 rounded-xl text-[11px] font-bold text-primary transition-all text-left rtl:text-right shadow-sm active:scale-95 cursor-pointer"
                 >
                   {s.text}
                 </button>
               ))}
             </div>
-            <div className="h-px bg-primary/5 max-w-md mx-auto my-6" />
+            <div className="h-px bg-primary/5 max-w-md mx-auto my-4" />
           </div>
         )}
 
         {messages.map((msg, idx) => (
           <div key={idx} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-fade-up`}>
             {msg.role === 'assistant' ? (
-              <div className="flex items-start space-x-2 rtl:space-x-reverse max-w-[92%] md:max-w-[82%]">
-                <div className="w-9 h-9 bg-primary rounded-2xl rounded-bl-md flex items-center justify-center shadow-md flex-shrink-0 mt-1 overflow-hidden">
-                  <img src={logo} alt="AskLex" className="w-6 h-6 object-cover" />
+              <div className="flex items-start space-x-2 rtl:space-x-reverse max-w-[90%] md:max-w-[80%]">
+                <div className="w-7 h-7 md:w-8 md:h-8 bg-primary rounded-xl rounded-bl-sm flex items-center justify-center shadow-sm flex-shrink-0 mt-0.5 overflow-hidden">
+                  <img src={logo} alt="AskLex" className="w-5 h-5 object-cover" />
                 </div>
                 <div className="flex-1 space-y-2 min-w-0">
                 {msg.content.includes('[LAW_NAME]') ? (() => {
@@ -986,52 +986,52 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
                   }
 
                   return (
-                    <div className={`rounded-[2rem] rounded-tl-none shadow-2xl p-6 md:p-8 relative overflow-hidden group border border-[#C9A84C]/10 border-l-[6px] ${severityColor} bg-[#F5F0E8] text-primary`}>
+                    <div className={`rounded-2xl rounded-tl-md shadow-lg p-4 md:p-6 relative overflow-hidden group border border-[#C9A84C]/10 border-l-4 ${severityColor} bg-[#F5F0E8] text-primary`}>
                       
                       {/* Header with Severity Badge */}
-                      <div className="flex items-center justify-between mb-4">
-                        <span className="text-[10px] text-[#0F1E36]/40 font-black uppercase tracking-widest">AskLex Legal Insights</span>
-                        <span className={`px-2.5 py-0.5 rounded-full text-[10px] font-black tracking-tight ${severityBadgeStyle}`}>
+                      <div className="flex items-center justify-between mb-3">
+                        <span className="text-[9px] text-[#0F1E36]/40 font-black uppercase tracking-wider">AskLex Legal Insights</span>
+                        <span className={`px-2 py-0.5 rounded-full text-[9px] font-black tracking-tight ${severityBadgeStyle}`}>
                           {severityBadgeText}
                         </span>
                       </div>
 
                       {/* ⚖️ Applicable Law Section */}
-                      <div className="border-t border-[#C9A84C]/30 pt-4 pb-4">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse text-[#0F1E36] font-black text-sm mb-1">
-                          <span className="text-[#C9A84C]">⚖️</span>
+                      <div className="border-t border-[#C9A84C]/25 pt-3 pb-3">
+                        <div className="flex items-center space-x-1.5 rtl:space-x-reverse text-[#0F1E36] font-black text-xs mb-1">
+                          <span className="text-[#C9A84C] text-sm">⚖️</span>
                           <span>{language === 'urdu' ? 'قابل اطلاق قانون' : 'Applicable Law'}</span>
                         </div>
-                        <div className={`markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-xl' : 'text-[#0F1E36] text-sm'}`}>
+                        <div className={`markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-lg' : 'text-[#0F1E36] text-[13px] font-semibold'}`}>
                           <ReactMarkdown>{parsed.lawName}</ReactMarkdown>
                         </div>
                       </div>
 
                       {/* 📋 What This Means Section */}
-                      <div className="border-t border-[#C9A84C]/30 pt-4 pb-4">
-                        <div className="flex items-center space-x-2 rtl:space-x-reverse text-[#0F1E36] font-black text-sm mb-2">
-                          <span className="text-[#C9A84C]">📋</span>
+                      <div className="border-t border-[#C9A84C]/25 pt-3 pb-3">
+                        <div className="flex items-center space-x-1.5 rtl:space-x-reverse text-[#0F1E36] font-black text-xs mb-1.5">
+                          <span className="text-[#C9A84C] text-sm">📋</span>
                           <span>{language === 'urdu' ? 'اس کا کیا مطلب ہے؟' : 'What This Means'}</span>
                         </div>
-                        <div className={`markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-lg leading-[1.8] text-[#0F1E36]/90' : 'text-[#0F1E36]/80 text-sm font-medium leading-relaxed'}`}>
+                        <div className={`markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-base leading-[1.9] text-[#0F1E36]/90' : 'text-[#0F1E36]/80 text-[13px] leading-relaxed'}`}>
                           <ReactMarkdown>{parsed.explanation}</ReactMarkdown>
                         </div>
                       </div>
 
                       {/* ✅ Action Steps Section */}
                       {parsed.actions && parsed.actions.length > 0 && (
-                        <div className="border-t border-[#C9A84C]/30 pt-4 pb-4">
-                          <div className="flex items-center space-x-2 rtl:space-x-reverse text-[#0F1E36] font-black text-sm mb-3">
-                            <span className="text-[#C9A84C]">✅</span>
+                        <div className="border-t border-[#C9A84C]/25 pt-3 pb-3">
+                          <div className="flex items-center space-x-1.5 rtl:space-x-reverse text-[#0F1E36] font-black text-xs mb-2.5">
+                            <span className="text-[#C9A84C] text-sm">✅</span>
                             <span>{language === 'urdu' ? 'عملی اقدامات' : 'Action Steps'}</span>
                           </div>
-                          <ul className="space-y-2.5">
+                          <ul className="space-y-2">
                             {parsed.actions.map((act, i) => (
-                              <li key={i} className="flex items-start space-x-2.5 rtl:space-x-reverse">
-                                <span className="w-5 h-5 bg-[#C9A84C]/10 text-[#C9A84C] font-black text-[10px] rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
+                              <li key={i} className="flex items-start space-x-2 rtl:space-x-reverse">
+                                <span className="w-4 h-4 bg-[#C9A84C]/15 text-[#C9A84C] font-black text-[9px] rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
                                   {i + 1}
                                 </span>
-                                <div className={`markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-lg text-[#0F1E36]/90' : 'text-[#0F1E36]/80 text-sm font-medium'}`}>
+                                <div className={`markdown-content flex-1 min-w-0 ${chatLanguage === 'urdu' ? 'font-urdu text-base text-[#0F1E36]/90' : 'text-[#0F1E36]/80 text-[13px]'}`}>
                                   <ReactMarkdown>{act}</ReactMarkdown>
                                 </div>
                               </li>
@@ -1042,12 +1042,12 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
 
                       {/* ⚠️ Punishment Section */}
                       {parsed.punishment && parsed.punishment.toLowerCase() !== 'not applicable' && parsed.punishment.trim() !== '' && (
-                        <div className="border-t border-[#C9A84C]/30 pt-4 pb-4">
-                          <div className="flex items-center space-x-2 rtl:space-x-reverse text-[#0F1E36] font-black text-sm mb-1.5">
-                            <span className="text-[#C9A84C]">⚠️</span>
+                        <div className="border-t border-[#C9A84C]/25 pt-3 pb-3">
+                          <div className="flex items-center space-x-1.5 rtl:space-x-reverse text-[#0F1E36] font-black text-xs mb-1.5">
+                            <span className="text-[#C9A84C] text-sm">⚠️</span>
                             <span>{language === 'urdu' ? 'سزا و جرمانہ' : 'Punishment'}</span>
                           </div>
-                          <div className={`bg-red-50/50 border border-red-100/50 rounded-xl p-3 text-red-700 markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-lg leading-[1.8]' : 'text-sm'}`}>
+                          <div className={`bg-red-50/50 border border-red-100/50 rounded-lg p-2.5 text-red-700 markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-base leading-[1.9]' : 'text-[13px]'}`}>
                             <ReactMarkdown>{parsed.punishment}</ReactMarkdown>
                           </div>
                         </div>
@@ -1066,22 +1066,20 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
                       </div>
 
                       {/* Speaker Controls */}
-                      <div className="mt-4 pt-4 border-t border-[#C9A84C]/20 flex items-center justify-between">
-                        <div className="flex items-center space-x-3 rtl:space-x-reverse">
-                          <button onClick={() => speak(parsed.explanation, idx)} className={`p-2 rounded-xl transition-all ${speakingId === idx ? 'bg-[#C9A84C] text-[#0F1E36]' : 'bg-[#0F1E36]/5 text-[#0F1E36]/40 hover:bg-[#0F1E36]/10'}`}>
-                            <Volume2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                        <span className="text-[10px] text-[#0F1E36]/20 font-black uppercase tracking-tighter">{msg.timestamp}</span>
+                      <div className="mt-3 pt-3 border-t border-[#C9A84C]/20 flex items-center justify-between">
+                        <button onClick={() => speak(parsed.explanation, idx)} className={`p-1.5 rounded-lg transition-all ${speakingId === idx ? 'bg-[#C9A84C] text-[#0F1E36]' : 'bg-[#0F1E36]/5 text-[#0F1E36]/40 hover:bg-[#0F1E36]/10'}`}>
+                          <Volume2 className="w-3.5 h-3.5" />
+                        </button>
+                        <span className="text-[9px] text-[#0F1E36]/20 font-bold">{msg.timestamp}</span>
                       </div>
 
                       {/* Agent Trace Dropdown */}
-                      <div className="mt-4 border-t border-[#C9A84C]/25 pt-4">
+                      <div className="mt-3 border-t border-[#C9A84C]/25 pt-3">
                         <button
                           onClick={() => setActiveTraceIndex(activeTraceIndex === idx ? null : idx)}
-                          className="text-[10px] text-[#0F1E36]/50 font-black uppercase tracking-wider flex items-center space-x-1.5 rtl:space-x-reverse bg-[#0F1E36]/5 px-4 py-2.5 rounded-xl border border-primary/5 transition-all hover:bg-accent/10 hover:text-accent hover:border-accent/30"
+                          className="text-[9px] text-[#0F1E36]/50 font-black uppercase tracking-wider flex items-center space-x-1.5 rtl:space-x-reverse bg-[#0F1E36]/5 px-3 py-2 rounded-lg border border-primary/5 transition-all hover:bg-accent/10 hover:text-accent hover:border-accent/30"
                         >
-                          <span>🔍 {language === 'urdu' ? 'یہ کیسے ملا؟ (Agent Trace)' : 'How I found this (Agent Trace)'}</span>
+                          <span>🔍 {language === 'urdu' ? 'یہ کیسے ملا؟' : 'How I found this'}</span>
                         </button>
 
                         {activeTraceIndex === idx && (
@@ -1137,36 +1135,25 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
                     </div>
                   );
                 })() : (
-                  <div className="bg-white rounded-[2.5rem] rounded-tl-none shadow-2xl shadow-primary/5 p-6 md:p-8 border border-primary/5 relative overflow-hidden group">
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-accent/5 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl" />
-                    
+                  <div className="bg-white rounded-2xl rounded-tl-md shadow-md shadow-primary/5 p-4 md:p-5 border border-primary/5 relative overflow-hidden group">
                     {msg.lawTag && (
-                      <div className="flex items-center space-x-2 rtl:space-x-reverse mb-4">
-                        <div className="px-3 py-1 bg-accent/10 text-accent text-[10px] font-black rounded-full border border-accent/20 flex items-center">
-                          <ShieldCheck className="w-3 h-3 mr-1.5 rtl:ml-1.5 rtl:mr-0" />
+                      <div className="flex items-center space-x-2 rtl:space-x-reverse mb-3 flex-wrap gap-y-1">
+                        <div className="px-2.5 py-0.5 bg-accent/10 text-accent text-[9px] font-black rounded-full border border-accent/20 flex items-center">
+                          <ShieldCheck className="w-2.5 h-2.5 mr-1 rtl:ml-1 rtl:mr-0" />
                           {msg.lawTag}
-                        </div>
-                        <div className="px-3 py-1 bg-success/10 text-success text-[10px] font-black rounded-full border border-success/20 flex items-center">
-                          <CheckCircle2 className="w-3 h-3 mr-1.5 rtl:ml-1.5 rtl:mr-0" />
-                          Grounded Advice
                         </div>
                       </div>
                     )}
 
-                    <div className={`markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-xl leading-[2.2] text-primary' : 'text-primary/80 font-medium leading-relaxed'}`}>
+                    <div className={`markdown-content ${chatLanguage === 'urdu' ? 'font-urdu text-base leading-[1.9] text-primary' : 'text-primary/80 text-[13px] leading-relaxed'}`}>
                       <ReactMarkdown>{msg.content}</ReactMarkdown>
                     </div>
 
-                    <div className="mt-6 pt-4 border-t border-primary/5 flex items-center justify-between">
-                      <div className="flex items-center space-x-3 rtl:space-x-reverse">
-                        <button onClick={() => speak(msg.content, idx)} className={`p-2 rounded-xl transition-all ${speakingId === idx ? 'bg-accent text-primary' : 'bg-primary/5 text-primary/40 hover:bg-primary/10'}`}>
-                          <Volume2 className="w-4 h-4" />
-                        </button>
-                        <button className="p-2 rounded-xl bg-primary/5 text-primary/40 hover:bg-primary/10 transition-all">
-                          <Info className="w-4 h-4" />
-                        </button>
-                      </div>
-                      <span className="text-[10px] text-primary/20 font-black uppercase tracking-tighter">{msg.timestamp}</span>
+                    <div className="mt-3 pt-3 border-t border-primary/5 flex items-center justify-between">
+                      <button onClick={() => speak(msg.content, idx)} className={`p-1.5 rounded-lg transition-all ${speakingId === idx ? 'bg-accent text-primary' : 'bg-primary/5 text-primary/40 hover:bg-primary/10'}`}>
+                        <Volume2 className="w-3.5 h-3.5" />
+                      </button>
+                      <span className="text-[9px] text-primary/20 font-bold">{msg.timestamp}</span>
                     </div>
                   </div>
                 )}
@@ -1174,8 +1161,8 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
               </div>
             ) : (
               <div className="flex flex-col items-end max-w-[85%]">
-                <div className="bg-gradient-to-br from-primary to-[#16284a] text-white px-5 py-3.5 rounded-[1.5rem] rounded-br-md shadow-lg shadow-primary/15">
-                  <p className={`${chatLanguage === 'urdu' ? 'font-urdu text-lg leading-relaxed' : 'text-sm leading-relaxed'} whitespace-pre-wrap break-words`}>{msg.content}</p>
+                <div className="bg-gradient-to-br from-primary to-[#16284a] text-white px-4 py-2.5 rounded-2xl rounded-br-md shadow-md shadow-primary/15">
+                  <p className={`${chatLanguage === 'urdu' ? 'font-urdu text-base leading-relaxed' : 'text-[13px] leading-relaxed'} whitespace-pre-wrap break-words`}>{msg.content}</p>
                 </div>
                 <span className="mt-1 mr-1 text-[9px] text-primary/30 font-bold">{msg.timestamp}</span>
               </div>
@@ -1185,16 +1172,16 @@ Generated via AskLex — Kanoon AI Legal Assistant`;
 
         {loadingState && (
           <div className="flex justify-start items-end space-x-2 rtl:space-x-reverse animate-fade-up">
-            <div className="w-9 h-9 bg-primary rounded-2xl rounded-bl-md flex items-center justify-center shadow-md flex-shrink-0 overflow-hidden">
-              <img src={logo} alt="AskLex" className="w-6 h-6 object-cover" />
+            <div className="w-7 h-7 md:w-8 md:h-8 bg-primary rounded-xl rounded-bl-sm flex items-center justify-center shadow-sm flex-shrink-0 overflow-hidden">
+              <img src={logo} alt="AskLex" className="w-5 h-5 object-cover" />
             </div>
-            <div className="bg-white px-5 py-4 rounded-[1.5rem] rounded-bl-md border border-primary/5 shadow-md flex items-center space-x-3 rtl:space-x-reverse">
-              <div className="flex items-center space-x-1.5">
-                <span className="w-2 h-2 bg-accent rounded-full animate-typing-dot" />
-                <span className="w-2 h-2 bg-accent rounded-full animate-typing-dot [animation-delay:0.2s]" />
-                <span className="w-2 h-2 bg-accent rounded-full animate-typing-dot [animation-delay:0.4s]" />
+            <div className="bg-white px-4 py-3 rounded-2xl rounded-bl-md border border-primary/5 shadow-sm flex items-center space-x-2.5 rtl:space-x-reverse">
+              <div className="flex items-center space-x-1">
+                <span className="w-1.5 h-1.5 bg-accent rounded-full animate-typing-dot" />
+                <span className="w-1.5 h-1.5 bg-accent rounded-full animate-typing-dot [animation-delay:0.2s]" />
+                <span className="w-1.5 h-1.5 bg-accent rounded-full animate-typing-dot [animation-delay:0.4s]" />
               </div>
-              <span className="text-primary/50 text-xs font-bold">
+              <span className="text-primary/50 text-[11px] font-bold">
                 {language === 'urdu' ? 'AskLex لکھ رہا ہے' : 'AskLex is typing'}
               </span>
             </div>
