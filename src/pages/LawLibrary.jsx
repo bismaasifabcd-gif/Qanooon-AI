@@ -532,13 +532,17 @@ const LawLibrary = () => {
                           <MessageSquare className="w-4 h-4 flex-shrink-0" />
                           <span>{language === 'urdu' ? 'AI سے پوچھیں' : 'Ask AI'}</span>
                         </button>
-                        {law.pdfUrl && (
+                        {(law.pdfUrl || law.sourceUrl) && (
                           <button
                             onClick={() => openFullText(law)}
-                            className="flex-1 border-2 border-primary/10 hover:bg-primary/5 text-primary font-bold py-3 md:py-4 rounded-xl md:rounded-2xl transition-all flex items-center justify-center space-x-2 text-xs md:text-sm"
+                            className="flex-1 border-2 border-accent/40 bg-accent/5 hover:bg-accent hover:text-primary text-primary font-bold py-3 md:py-4 rounded-xl md:rounded-2xl transition-all flex items-center justify-center space-x-2 text-xs md:text-sm"
                           >
                             <FileText className="w-4 h-4 flex-shrink-0" />
-                            <span>{language === 'urdu' ? 'اصل دستاویز (PDF)' : 'Original PDF'}</span>
+                            <span>
+                              {law.pdfUrl
+                                ? (language === 'urdu' ? 'ایکٹ پڑھیں (PDF)' : 'Read Act (PDF)')
+                                : (language === 'urdu' ? 'اصل دستاویز پڑھیں' : 'Read Full Text')}
+                            </span>
                           </button>
                         )}
                         <button
