@@ -18,10 +18,8 @@ import {
   ShieldCheck,
   FileText,
 } from 'lucide-react';
-import ReactMarkdown from 'react-markdown';
 import { useLanguage } from '../contexts/LanguageContext';
 import { lawsData, LAW_CATEGORY_LABELS } from '../data/laws';
-import { searchLaws } from '../services/ragService';
 import { KanoonLogo, LibraryBooksIllustration } from '../components/SvgAssets';
 import FeatureGuide from '../components/FeatureGuide';
 import logo from '../assets/logo.png';
@@ -32,6 +30,109 @@ const API_BASE = (
 ).replace(/\/$/, '');
 
 const BOOKMARK_KEY = 'kanoon_bookmarked_laws';
+
+/**
+ * Renders the AI full-detail object as clean, professionally labelled sections
+ * (Overview → Key Sections → Punishments → Authority → Procedure → Helplines),
+ * instead of dumping one block of text.
+ */
+const LawDetail = ({ detail, language }) => {
+  const ur = language === 'urdu';
+  const L = {
+    full: ur ? 'مکمل تفصیل' : 'Full Detail',
+    overview: ur ? 'جائزہ' : 'Overview',
+    sections: ur ? 'اہم دفعات اور ان کا مطلب' : 'Key Sections & What They Mean',
+    punish: ur ? 'سزائیں / جرمانے' : 'Punishments & Penalties',
+    authority: ur ? 'متعلقہ عدالت / ادارہ' : 'Relevant Court / Authority',
+    procedure: ur ? 'عملی طریقہ کار' : 'Step-by-Step Procedure',
+    helplines: ur ? 'ہیلپ لائنز' : 'Helplines',
+  };
+  const txt = ur ? 'font-urdu text-base leading-relaxed' : 'text-xs md:text-sm leading-relaxed';
+  const label = 'text-[9px] md:text-[10px] font-black text-accent uppercase tracking-widest mb-2';
+
+  return (
+    <div className="bg-surface rounded-2xl p-4 md:p-5 border border-accent/10 space-y-5">
+      <p className="text-[9px] md:text-[10px] font-black text-accent uppercase tracking-widest flex items-center gap-1.5">
+        <BookOpen className="w-3.5 h-3.5" />
+        {L.full}
+      </p>
+
+      {detail.overview && (
+        <section>
+          <p className={label}>{L.overview}</p>
+          <p className={`text-primary/75 ${txt}`}>{detail.overview}</p>
+        </section>
+      )}
+
+      {detail.keySections?.length > 0 && (
+        <section>
+          <p className={label}>{L.sections}</p>
+          <div className="space-y-2">
+            {detail.keySections.map((s, i) => (
+              <div key={i} className="bg-white rounded-lg p-3 border border-primary/5">
+                {s.section && (
+                  <p className="text-primary font-black text-[11px] md:text-xs mb-0.5">{s.section}</p>
+                )}
+                <p className={`text-primary/70 ${txt}`}>{s.meaning}</p>
+              </div>
+            ))}
+          </div>
+        </section>
+      )}
+
+      {detail.punishments?.length > 0 && (
+        <section>
+          <p className={label}>{L.punish}</p>
+          <ul className="space-y-1.5">
+            {detail.punishments.map((p, i) => (
+              <li key={i} className={`flex items-start gap-2 text-primary/70 ${txt}`}>
+                <span className="w-1.5 h-1.5 bg-red-400 rounded-full mt-2 flex-shrink-0" />
+                <span>{p}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+
+      {detail.authority && (
+        <section>
+          <p className={label}>{L.authority}</p>
+          <p className={`text-primary/75 ${txt}`}>{detail.authority}</p>
+        </section>
+      )}
+
+      {detail.procedure?.length > 0 && (
+        <section>
+          <p className={label}>{L.procedure}</p>
+          <ol className="space-y-2">
+            {detail.procedure.map((step, i) => (
+              <li key={i} className={`flex items-start gap-2.5 text-primary/70 ${txt}`}>
+                <span className="w-5 h-5 bg-accent/15 text-accent font-black text-[10px] rounded-full flex items-center justify-center mt-0.5 flex-shrink-0">
+                  {i + 1}
+                </span>
+                <span>{step}</span>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
+
+      {detail.helplines?.length > 0 && (
+        <section>
+          <p className={label}>{L.helplines}</p>
+          <ul className="space-y-1.5">
+            {detail.helplines.map((h, i) => (
+              <li key={i} className={`flex items-start gap-2 text-primary/70 ${txt}`}>
+                <span className="w-1.5 h-1.5 bg-success rounded-full mt-2 flex-shrink-0" />
+                <span>{h}</span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  );
+};
 
 const LawLibrary = () => {
   const navigate = useNavigate();
@@ -60,13 +161,16 @@ const LawLibrary = () => {
       });
       if (!res.ok) throw new Error('detail failed');
       const data = await res.json();
-      setDetails((prev) => ({ ...prev, [law.id]: data.detail || '' }));
+      setDetails((prev) => ({ ...prev, [law.id]: data.detail || null }));
     } catch {
       setDetails((prev) => ({
         ...prev,
-        [law.id]: language === 'urdu'
-          ? 'تفصیل حاصل کرنے میں دشواری ہوئی۔ دوبارہ کوشش کریں۔'
-          : 'Could not load the full detail right now. Please try again.',
+        [law.id]: {
+          overview: language === 'urdu'
+            ? 'تفصیل حاصل کرنے میں دشواری ہوئی۔ دوبارہ کوشش کریں۔'
+            : 'Could not load the full detail right now. Please try again.',
+          keySections: [], punishments: [], authority: '', procedure: [], helplines: [],
+        },
       }));
     } finally {
       setLoadingDetailId(null);
@@ -114,6 +218,9 @@ const LawLibrary = () => {
     if (val.trim().length > 5) {
       setIsSearching(true);
       try {
+        // Lazy-load the RAG service (and its heavy transformers/onnx deps) only
+        // when a real search fires — keeps them out of the initial page bundle.
+        const { searchLaws } = await import('../services/ragService');
         const results = await searchLaws(val);
         setAiResults(results || []);
       } catch { setAiResults([]); }
@@ -378,17 +485,9 @@ const LawLibrary = () => {
                         </div>
                       )}
 
-                      {/* Full detail (AI-generated, in-app) */}
+                      {/* Full detail (AI-generated, in-app) — structured, not a bulk dump */}
                       {details[law.id] ? (
-                        <div className="bg-surface rounded-2xl p-4 md:p-5 border border-accent/10">
-                          <p className="text-[9px] md:text-[10px] font-black text-accent uppercase tracking-widest flex items-center gap-1.5 mb-3">
-                            <BookOpen className="w-3.5 h-3.5" />
-                            {language === 'urdu' ? 'مکمل تفصیل' : 'Full Detail'}
-                          </p>
-                          <div className={`markdown-content ${language === 'urdu' ? 'font-urdu text-base leading-loose' : 'text-xs md:text-sm'} text-primary/80`}>
-                            <ReactMarkdown>{details[law.id]}</ReactMarkdown>
-                          </div>
-                        </div>
+                        <LawDetail detail={details[law.id]} language={language} />
                       ) : (
                         <button
                           onClick={() => loadFullDetail(law)}

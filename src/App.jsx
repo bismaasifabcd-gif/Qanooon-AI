@@ -1,21 +1,31 @@
-import React from 'react';
+import React, { Suspense, lazy } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import { LanguageProvider } from './contexts/LanguageContext';
 import { AuthProvider, useAuth } from './contexts/AuthContext';
-import Navbar from './components/layout/Navbar';
 import BottomNav from './components/layout/BottomNav';
-import Home from './pages/Home';
+
+// Splash loads eagerly (it's the first screen). Every other page is code-split
+// with React.lazy so heavy pages (Chatbot's jsPDF/pdf.js, the RAG library, etc.)
+// are fetched only when the user navigates there — keeping first paint fast.
 import Splash from './pages/Splash';
-import Auth from './pages/Auth';
-import Onboarding from './pages/Onboarding';
-import Dashboard from './pages/Dashboard';
-import Chatbot from './pages/Chatbot';
-import LawyerSearch from './pages/LawyerSearch';
-import LawLibrary from './pages/LawLibrary';
-import History from './pages/History';
-import Profile from './pages/Profile';
-import Settings from './pages/Settings';
-import PrivacyPolicy from './pages/PrivacyPolicy';
+const Home = lazy(() => import('./pages/Home'));
+const Auth = lazy(() => import('./pages/Auth'));
+const Onboarding = lazy(() => import('./pages/Onboarding'));
+const Dashboard = lazy(() => import('./pages/Dashboard'));
+const Chatbot = lazy(() => import('./pages/Chatbot'));
+const LawyerSearch = lazy(() => import('./pages/LawyerSearch'));
+const LawLibrary = lazy(() => import('./pages/LawLibrary'));
+const History = lazy(() => import('./pages/History'));
+const Profile = lazy(() => import('./pages/Profile'));
+const Settings = lazy(() => import('./pages/Settings'));
+const PrivacyPolicy = lazy(() => import('./pages/PrivacyPolicy'));
+
+// Lightweight full-screen fallback shown while a page chunk loads.
+const PageLoader = () => (
+  <div className="min-h-[100dvh] flex items-center justify-center bg-surface">
+    <div className="w-8 h-8 border-2 border-accent border-t-transparent rounded-full animate-spin" />
+  </div>
+);
 
 const ProtectedRoute = ({ children }) => {
   const { user, userData, loading } = useAuth();
@@ -64,6 +74,7 @@ const AppContent = () => {
         But feature pages should probably have some nav.
       */}
       <main>
+        <Suspense fallback={<PageLoader />}>
         <Routes>
           <Route path="/" element={<Splash />} />
           <Route path="/home" element={<Home />} />
@@ -83,6 +94,7 @@ const AppContent = () => {
           <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
         </Routes>
+        </Suspense>
       </main>
       
       {showNav && <BottomNav />}

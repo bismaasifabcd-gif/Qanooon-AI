@@ -146,17 +146,16 @@
 }
 
 /* Custom Markdown Content Styles */
+/* Chat answers are structured but plain — headings stay subtle, not stylish. */
 .markdown-content h1, 
 .markdown-content h2, 
 .markdown-content h3 {
   color: #0F1E36;
-  font-weight: 800;
+  font-weight: 600;
+  font-size: 0.95rem;
   margin-top: 0.75rem;
-  margin-bottom: 0.5rem;
+  margin-bottom: 0.4rem;
 }
-.markdown-content h1 { font-size: 1.15rem; }
-.markdown-content h2 { font-size: 1.02rem; }
-.markdown-content h3 { font-size: 0.95rem; }
 .markdown-content h1:first-child,
 .markdown-content h2:first-child,
 .markdown-content h3:first-child { margin-top: 0; }
@@ -164,9 +163,10 @@
 .markdown-content ul:last-child,
 .markdown-content ol:last-child { margin-bottom: 0; }
 
+/* Keep emphasis near-normal weight so answers read plain, not bold/stylish. */
 .markdown-content strong {
   color: #0F1E36;
-  font-weight: 700;
+  font-weight: 600;
 }
 
 .markdown-content p {
