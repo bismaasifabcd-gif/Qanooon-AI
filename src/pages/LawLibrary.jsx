@@ -235,9 +235,10 @@ const LawLibrary = () => {
     return law ? law.pdfUrl : `/books/${title}`;
   };
 
+  // Open ONLY the local bundled PDF for this exact law. Never redirect to an
+  // external website — if there's no local PDF, no button is shown.
   const openFullText = (law) => {
-    if (law.pdfUrl) window.open(law.pdfUrl, '_blank');
-    else if (law.sourceUrl) window.open(law.sourceUrl, '_blank');
+    if (law.pdfUrl) window.open(law.pdfUrl, '_blank', 'noopener,noreferrer');
   };
 
   const copyCitation = (law) => {
@@ -532,17 +533,13 @@ const LawLibrary = () => {
                           <MessageSquare className="w-4 h-4 flex-shrink-0" />
                           <span>{language === 'urdu' ? 'AI سے پوچھیں' : 'Ask AI'}</span>
                         </button>
-                        {(law.pdfUrl || law.sourceUrl) && (
+                        {law.pdfUrl && (
                           <button
                             onClick={() => openFullText(law)}
                             className="flex-1 border-2 border-accent/40 bg-accent/5 hover:bg-accent hover:text-primary text-primary font-bold py-3 md:py-4 rounded-xl md:rounded-2xl transition-all flex items-center justify-center space-x-2 text-xs md:text-sm"
                           >
                             <FileText className="w-4 h-4 flex-shrink-0" />
-                            <span>
-                              {law.pdfUrl
-                                ? (language === 'urdu' ? 'ایکٹ پڑھیں (PDF)' : 'Read Act (PDF)')
-                                : (language === 'urdu' ? 'اصل دستاویز پڑھیں' : 'Read Full Text')}
-                            </span>
+                            <span>{language === 'urdu' ? 'ایکٹ پڑھیں (PDF)' : 'Read Act (PDF)'}</span>
                           </button>
                         )}
                         <button
